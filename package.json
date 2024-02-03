@@ -1,0 +1,21 @@
+{
+  "name": "kink_tasks",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "seedrandom": "^3.0.5",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.5",
+    "vuetify": "^3.4.4",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.4.0",
+    "vite": "^4.4.11"
+  }
+}
