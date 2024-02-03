@@ -16,9 +16,18 @@
   </v-container>
 </template>
 
-<script setup>
-
+<script>
 import GenerateTaskMenu from "@/views/GenerateTaskMenu.vue";
+
+export default {
+  name: "HomeView",
+  components: {
+    GenerateTaskMenu
+  },
+  mounted() {
+    console.log("Home!")
+  }
+}
 
 </script>
 
@@ -37,6 +46,5 @@ import GenerateTaskMenu from "@/views/GenerateTaskMenu.vue";
 
   transition: background-color 1s ease-out;
 }
-
 
 </style>

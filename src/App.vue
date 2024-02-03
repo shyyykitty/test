@@ -1,9 +1,3 @@
-<script setup>
-import {RouterView} from "vue-router"
-import RequirementList from "@/components/RequirementList.vue";
-import DisabledTaskList from "@/components/DisabledTaskList.vue";
-</script>
-
 <template>
   <v-app>
     <v-app-bar app>
@@ -27,9 +21,15 @@ import DisabledTaskList from "@/components/DisabledTaskList.vue";
 <script>
 import {loadState} from "@/store/store";
 import {setSeed} from "@/tasks/util";
+import RequirementList from "@/components/RequirementList.vue";
+import DisabledTaskList from "@/components/DisabledTaskList.vue";
 
 export default {
   name: "App",
+  components: {
+    RequirementList,
+    DisabledTaskList
+  },
   created() {
     loadState();
     setSeed(this.$store.state.seed)
