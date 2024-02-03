@@ -38,6 +38,9 @@ export default {
     return {
       showDrawer: true
     }
+  },
+  mounted() {
+    console.log("App!")
   }
 }
 </script>
