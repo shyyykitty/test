@@ -1,4 +1,4 @@
-import * as seedrandoom from "seedrandom/seedrandom"
+import seedrandoom from "seedrandom/seedrandom"
 
 let rand = seedrandoom("hello");
 

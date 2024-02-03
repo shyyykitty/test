@@ -48,7 +48,7 @@ export default {
 }
 
 .v-navigation-drawer__content {
-//overflow-y: scroll !important;
+  /** overflow-y: scroll !important; */
 }
 
 .text-muted {
