@@ -4,15 +4,25 @@ export class Modifier {
      * @param text {string}
      * @param taskDuration {number|null}
      * @param timeDuration {number|null}
+     * @param showProgress {boolean}
      */
-    constructor(text, taskDuration = null, timeDuration = null) {
+    constructor(text, taskDuration = null, timeDuration = null, showProgress = true) {
         this.text = text;
         this.taskDuration = taskDuration
         this.timeDuration = timeDuration;
+        this.showProgress = showProgress;
     }
 }
 
-const HOUR = 60 * 60;
+/**
+ * @typedef {Object} ModifierInstance
+ * @property {string} name
+ * @property {number} startTime
+ * @property {number} startTask
+ */
+
+// const HOUR = 60 * 60 * 1000;
+const HOUR = 100 * 1000;
 
 export const CumAfterNextTaskModifier = new Modifier(
     "You are allowed to cum after you complete this task",

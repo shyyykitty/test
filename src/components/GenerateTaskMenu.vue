@@ -57,6 +57,11 @@ export default {
     onTaskDone() {
       this.$store.commit("incrementCompletedTasks")
 
+      const task = Tasks[this.$store.state.task];
+      Object.keys(task.modifiers).forEach(name => {
+        this.$store.commit("createModifier", name);
+      });
+
       this.$store.dispatch("rollTask");
       this.$store.dispatch("rollTwist");
       this.$store.commit("resetTimer");

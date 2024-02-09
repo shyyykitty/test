@@ -15,6 +15,15 @@ export const store = createStore({
             completedTasks: 0,
             disabledTasks: [],
             disabledTwists: [],
+            modifiers: []
+        }
+    },
+    getters: {
+        /**
+         * @returns ModifierInstance[]
+         */
+        modifiers(state) {
+            return state.modifiers;
         }
     },
     mutations: {
@@ -76,11 +85,13 @@ export const store = createStore({
             if (!state.disabledTasks.includes(task)) {
                 state.disabledTasks.push(task);
             }
+            saveState();
         },
         enableTask(state, task) {
             if (state.disabledTasks.includes(task)) {
                 state.disabledTasks.splice(state.disabledTasks.indexOf(task), 1);
             }
+            saveState();
         },
         disableTwist(state, task) {
 
@@ -91,12 +102,42 @@ export const store = createStore({
             if (!state.disabledTwists.includes(task)) {
                 state.disabledTwists.push(task);
             }
+            saveState();
         },
         enableTwist(state, task) {
             if (state.disabledTwists.includes(task)) {
                 state.disabledTwists.splice(state.disabledTwists.indexOf(task), 1);
             }
         },
+        createModifier(state, name) {
+            if (!name) {
+                debugger;
+            }
+
+            if (state.modifiers.find(m => m.name === name)) {
+                // Overwrite modifier and reset timer
+                state.modifiers = state.modifiers.filter(m => m.name !== name);
+            }
+
+            /** @type {ModifierInstance} */
+            const instance = {
+                name: name,
+                startTime: Number(new Date()),
+                startTask: state.completedTasks,
+            }
+            state.modifiers.push(instance);
+            saveState();
+        },
+        removeModifier(state, name) {
+            const index = state.modifiers.indexOf(m => m.name === name);
+
+            if (index === -1) {
+                debugger;
+            }
+
+            state.modifiers.splice(index, 1);
+            saveState();
+        }
     },
     actions: {
         rollTask({commit, state}) {

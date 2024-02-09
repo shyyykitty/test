@@ -18,9 +18,9 @@ export class Task {
      * @param {Requirement[]|ObjectReq[]} requirements
      * @param {Object.<string, function>} variables
      * @param {Object.<string, Task>} twists
-     * @param {Modifier} modifiers
+     * @param {Object.<string, Modifier>} modifiers
      */
-    constructor(template, requirements = [], variables = {}, twists = {}, modifiers = []) {
+    constructor(template, requirements = [], variables = {}, twists = {}, modifiers = {}) {
         this.template = template
         this.requirements = requirements
         this.variables = variables

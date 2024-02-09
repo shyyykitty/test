@@ -6,22 +6,25 @@
       <v-card-text>TODO</v-card-text>
       <v-card-text>
         <ul>
-          <li>Completing a task/twist can give you a Modifier</li>
-          <li>Modifiers last N completed tasks, or N amount of time</li>
+          <li>Modifiers last N completed tasks</li>
         </ul>
       </v-card-text>
     </v-card>
+
+    <Modifier :modifier="mod" v-for="mod in $store.state.modifiers"></Modifier>
 
     <GenerateTaskMenu/>
   </v-container>
 </template>
 
 <script>
-import GenerateTaskMenu from "@/views/GenerateTaskMenu.vue";
+import GenerateTaskMenu from "@/components/GenerateTaskMenu.vue";
+import Modifier from "@/components/Modifier.vue";
 
 export default {
   name: "HomeView",
   components: {
+    Modifier,
     GenerateTaskMenu
   },
   mounted() {

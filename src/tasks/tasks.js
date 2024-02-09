@@ -27,6 +27,7 @@ import {
     NippleClampTwist, ContinueEdgingRuinTwist, TouchIfWetTwist, TouchIfDropTwist, NoEdgingTwist
 } from "@/tasks/twists";
 import {Gaussian, Uniform} from "@/tasks/util";
+import {KeepLewdPicAsWallpaper} from "@/tasks/modifiers";
 
 
 export const LewPicTask = new Task(
@@ -146,7 +147,8 @@ export const EdgeAndPicsTask = new Task(
     [EdgeReq, PictureReq, TouchingReq],
     {},
     {NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, NippleClampTwist, RuinOrgasmAfterEdgeTwist,
-        ContinueEdgingRuinTwist}
+        ContinueEdgingRuinTwist},
+    {KeepLewdPicAsWallpaper}
 )
 
 export const RideEdgeTask = new Task(
@@ -180,7 +182,7 @@ export const PublicPlug = new Task(
     {ListenAudioPornTwist, EdgeBeforeTaskTwist}
 )
 
-export const NipplePlayStep1Task = new Task(
+export const NipplePlayStep1Tas = new Task(
     "Caress and play with your body without touching your crotch area until you are wet. " +
     "Remove your shirt, scoop up the wetness with your fingers on both hands and very gently roll your nipples " +
     "between your index and thumb. Close your eyes and enjoy the feeling. Do this for {N} minutes.",
