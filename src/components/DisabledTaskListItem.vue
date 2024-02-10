@@ -6,7 +6,7 @@
         <template v-slot:append>
           <v-btn
               @click="onClick()"
-              icon="mdi-delete"
+              icon="delete"
               variant="text"
               color="primary"
           ></v-btn>

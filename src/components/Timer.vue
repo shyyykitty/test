@@ -13,16 +13,16 @@
     </v-progress-circular>
     <div class="timer-buttons" v-if="!forced">
       <v-btn v-if="!paused" @click="onPauseClick()" color="primary">
-        <v-icon>mdi-pause</v-icon>
+        <v-icon>pause</v-icon>
         pause
       </v-btn>
       <v-btn v-else @click="onStartClick()" :disabled="timerValue === 0" color="primary">
-        <v-icon>mdi-play</v-icon>
+        <v-icon>play_arrow</v-icon>
         start
       </v-btn>
 
       <v-btn @click="onRestartClick()" :disabled="!paused || timerValue === initialValue" color="primary">
-        <v-icon>mdi-restart</v-icon>
+        <v-icon>replay</v-icon>
         restart
       </v-btn>
     </div>

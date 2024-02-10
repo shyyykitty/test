@@ -4,7 +4,7 @@
       <span>Task</span>
       <v-dialog width="500">
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props">mdi-dots-vertical</v-icon>
+          <v-icon v-bind="props">more_vert</v-icon>
         </template>
 
         <template v-slot:default="{ isActive }">
@@ -34,7 +34,7 @@
         <div style="float: right; font-size: 1.25rem; padding-top: 0.5rem">
           <v-dialog width="500">
             <template v-slot:activator="{ props }">
-              <v-icon v-bind="props">mdi-dots-vertical</v-icon>
+              <v-icon v-bind="props">more_vert</v-icon>
             </template>
 
             <template v-slot:default="{ isActive }">
@@ -55,8 +55,8 @@
     </v-card-text>
 
     <v-card-text v-else>
-      <v-btn @click="onAddTwist()" style="margin-left: auto;" color="primary">
-        <v-icon>mdi-plus</v-icon>
+      <v-btn @click="onAddTwist()" style="margin-left: auto;" color="primary" variant="outlined">
+        <v-icon>add</v-icon>
         Add twist
       </v-btn>
     </v-card-text>

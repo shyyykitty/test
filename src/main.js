@@ -4,7 +4,7 @@ import router from "./router"
 
 import 'vuetify/styles'
 import {createVuetify} from 'vuetify'
-import {aliases, mdi} from 'vuetify/iconsets/mdi'
+import {aliases, md} from 'vuetify/iconsets/md'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import {store} from "@/store/store";
@@ -13,10 +13,10 @@ import {pink, darkBlue} from "@/themes";
 
 const vuetify = createVuetify({
     icons: {
-        defaultSet: "mdi",
+        defaultSet: "md",
         aliases,
         sets: {
-            mdi
+            md
         }
     },
     components,
