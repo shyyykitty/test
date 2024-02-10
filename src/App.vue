@@ -18,6 +18,16 @@
     <v-main>
       <RouterView/>
     </v-main>
+
+    <v-footer>
+      <span class="footer">
+        All user data is saved offline in your browser and never shared
+        •
+        Distributed under the MIT license
+        •
+        <a href="https://github.com/shyyykitty/test" target="_blank">Source code</a>
+      </span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -60,5 +70,10 @@ export default {
 
 .text-muted {
   color: #757575;
+}
+
+.footer {
+  font-size: 70%;
+  opacity: 66%
 }
 </style>
