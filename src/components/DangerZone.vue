@@ -21,7 +21,7 @@
               <template v-slot:default="{ isActive }">
                 <v-card title="Confirmation">
                   <v-card-text>
-                    This will reset your settings to the defaults. This action is irreversable.
+                    Are you sure you want to reset? This action is irreversible.
                   </v-card-text>
 
                   <v-card-actions>
