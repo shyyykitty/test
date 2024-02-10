@@ -8,6 +8,7 @@
               @click="onClick()"
               icon="mdi-delete"
               variant="text"
+              color="primary"
           ></v-btn>
         </template>
       </v-list-item>

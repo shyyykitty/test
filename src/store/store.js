@@ -2,6 +2,8 @@ import {createStore} from "vuex";
 import {Requirements} from "@/tasks/requirements";
 import {setSeed, Uniform} from "@/tasks/util";
 import {Tasks} from "@/tasks/tasks";
+import {useTheme} from "vuetify";
+import * as Themes from "@/themes";
 
 export const store = createStore({
     state() {
@@ -15,7 +17,8 @@ export const store = createStore({
             completedTasks: 0,
             disabledTasks: [],
             disabledTwists: [],
-            modifiers: []
+            modifiers: [],
+            theme: "pink"
         }
     },
     getters: {
@@ -136,6 +139,10 @@ export const store = createStore({
             }
 
             state.modifiers.splice(index, 1);
+            saveState();
+        },
+        setTheme(state, name) {
+            state.theme = name;
             saveState();
         }
     },

@@ -5,23 +5,23 @@
         :size="100"
         :width="15"
         :model-value="timerValue / initialValue * 100"
-        :color="paused ? 'blue-grey-lighten-1' : 'primary'"
+        :color="paused ? 'primary-lighten-2' : 'primary'"
     >
       <span :class="{blink: timerValue === 0}">
       {{ timerHumanValue() }}
       </span>
     </v-progress-circular>
     <div class="timer-buttons" v-if="!forced">
-      <v-btn v-if="!paused" @click="onPauseClick()">
+      <v-btn v-if="!paused" @click="onPauseClick()" color="primary">
         <v-icon>mdi-pause</v-icon>
         pause
       </v-btn>
-      <v-btn v-else @click="onStartClick()" :disabled="timerValue === 0">
+      <v-btn v-else @click="onStartClick()" :disabled="timerValue === 0" color="primary">
         <v-icon>mdi-play</v-icon>
         start
       </v-btn>
 
-      <v-btn @click="onRestartClick()" :disabled="!paused || timerValue === initialValue">
+      <v-btn @click="onRestartClick()" :disabled="!paused || timerValue === initialValue" color="primary">
         <v-icon>mdi-restart</v-icon>
         restart
       </v-btn>

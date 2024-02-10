@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card>
+    <v-card v-if="!task">
       <v-card-title>Generate task</v-card-title>
       <v-card-text>
         <template v-if="loading">
@@ -9,7 +9,7 @@
         <template v-else>
           <p>Generate a random task based on your preferences.</p>
           <br>
-          <v-btn @click="onGenerateClick()">Generate</v-btn>
+          <v-btn @click="onGenerateClick()" color="primary">Generate</v-btn>
         </template>
       </v-card-text>
     </v-card>

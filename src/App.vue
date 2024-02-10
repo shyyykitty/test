@@ -1,6 +1,6 @@
 <template>
-  <v-app>
-    <v-app-bar app>
+  <v-app :theme="$store.state.theme">
+    <v-app-bar app color="primary">
       <v-app-bar-nav-icon @click="showDrawer = !showDrawer"></v-app-bar-nav-icon>
     </v-app-bar>
 
@@ -9,7 +9,10 @@
         <RequirementList style="margin-top: 10px"/>
         <DisabledTaskList></DisabledTaskList>
         <DisabledTaskList twist></DisabledTaskList>
+        <Appearance/>
+        <DangerZone></DangerZone>
       </v-expansion-panels>
+
     </v-navigation-drawer>
 
     <v-main>
@@ -23,10 +26,14 @@ import {loadState} from "@/store/store";
 import {setSeed} from "@/tasks/util";
 import RequirementList from "@/components/RequirementList.vue";
 import DisabledTaskList from "@/components/DisabledTaskList.vue";
+import DangerZone from "@/components/DangerZone.vue";
+import Appearance from "@/components/Appearance.vue";
 
 export default {
   name: "App",
   components: {
+    Appearance,
+    DangerZone,
     RequirementList,
     DisabledTaskList
   },
@@ -38,9 +45,6 @@ export default {
     return {
       showDrawer: true
     }
-  },
-  mounted() {
-    console.log("App!")
   }
 }
 </script>

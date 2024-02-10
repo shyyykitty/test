@@ -2,7 +2,7 @@
   <v-list-item>
     <template v-if="checkbox" v-slot:prepend>
       <v-list-item-action>
-        <v-checkbox-btn :model-value="$store.state.requirements.includes(req.name)"></v-checkbox-btn>
+        <v-checkbox-btn :model-value="$store.state.requirements.includes(req.name)" color="primary"></v-checkbox-btn>
       </v-list-item-action>
     </template>
 

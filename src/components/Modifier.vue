@@ -1,12 +1,10 @@
 <template>
-  <v-card style="margin-bottom: 1em" color="#FCE4EC">
+  <v-card style="margin-bottom: 1em">
     <v-card-text>
-      <!--      <p>{{ modifier }}</p>-->
       <p>{{ text }}</p>
       <br>
 
-
-      <v-progress-linear :model-value="progress * 100" color="#9C27B0" height="15">
+      <v-progress-linear :model-value="progress * 100" color="secondary" height="15">
         <template v-slot:default="{ value }">
           <span v-html="label"></span>
         </template>

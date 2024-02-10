@@ -21,8 +21,7 @@ export class Modifier {
  * @property {number} startTask
  */
 
-// const HOUR = 60 * 60 * 1000;
-const HOUR = 100 * 1000;
+const HOUR = 60 * 60 * 1000;
 
 export const CumAfterNextTaskModifier = new Modifier(
     "You are allowed to cum after you complete this task",

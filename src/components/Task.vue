@@ -55,11 +55,16 @@
     </v-card-text>
 
     <v-card-text v-else>
-      <v-btn @click="onAddTwist()" style="margin-left: auto;">Add twist</v-btn>
+      <v-btn @click="onAddTwist()" style="margin-left: auto;" color="primary">
+        <v-icon>mdi-plus</v-icon>
+        Add twist
+      </v-btn>
     </v-card-text>
 
     <v-card-actions>
-      <v-btn @click="onTaskDone()" style="margin-left: auto;">Task completed</v-btn>
+      <v-btn @click="onTaskDone()" style="margin-left: auto;" color="primary" variant="elevated">
+        Task completed
+      </v-btn>
     </v-card-actions>
 
     <v-snackbar
