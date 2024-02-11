@@ -41,16 +41,23 @@ export default {
     },
     twists() {
       if (this.$store.state.twists) {
-        return this.$store.state.twists.map(name => Tasks[this.$store.state.task].twists[name])
+        const twists = Tasks[this.$store.state.task].twists;
+
+        return this.$store.state.twists.map(name => {
+          if (!twists || !(name in twists)) {
+            debugger;
+          }
+
+          return twists[name]
+        })
       }
+      debugger
       return null;
     }
   },
   methods: {
     onGenerateClick() {
-      this.$store.dispatch("rollTask");
-      this.$store.dispatch("rollTwist");
-      this.$store.commit("resetTimer");
+      this.$store.dispatch("rollTaskAndTwist");
 
       // this.$store.commit("setSeed", `${Math.random()}`);
     },
@@ -62,9 +69,7 @@ export default {
         this.$store.commit("createModifier", name);
       });
 
-      this.$store.dispatch("rollTask");
-      this.$store.dispatch("rollTwist");
-      this.$store.commit("resetTimer");
+      this.$store.dispatch("rollTaskAndTwist");
     }
   }
 }

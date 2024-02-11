@@ -101,7 +101,7 @@ export const SuckDildoTask = new Task(
 export const EdgeMakeupBrushTask = new Task(
     "Edge {N} times by using a small brush on yourself.",
     [SmallBrushReq, EdgeReq, TouchingReq],
-    {N: Uniform(3, 10)},
+    {N: Uniform(3, 8)},
     {NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, RuinOrgasmAfterEdgeTwist, MirrorTwist, VerySlowlyTwist}
 )
 

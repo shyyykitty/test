@@ -10,7 +10,7 @@
         <template v-slot:default="{ isActive }">
           <v-card title="Skip task">
             <RequirementsList @on-skip-task="onSkipTask(); isActive.value = false"
-                              @on-remove-req="onRemoveReq($event); isActive.value = false"
+                              @on-remove-req="onRemoveReq($event, true); isActive.value = false"
                               :task="task"/>
           </v-card>
         </template>
@@ -40,7 +40,7 @@
             <template v-slot:default="{ isActive }">
               <v-card title="Skip twist">
                 <RequirementsList @on-skip-task="onSkipTwist(idx); isActive.value = false"
-                                  @on-remove-req="onRemoveReq($event); onSkipTwist(); isActive.value = false"
+                                  @on-remove-req="onRemoveReq($event, false); onSkipTwist(); isActive.value = false"
                                   :task="twist"
                                   :twist="true"/>
               </v-card>
@@ -48,7 +48,7 @@
           </v-dialog>
         </div>
 
-        <v-card-text v-if="twist">
+        <v-card-text>
           <TaskBody :text="twist.text()"></TaskBody>
         </v-card-text>
       </v-card>
@@ -106,22 +106,21 @@ export default {
   methods: {
     onSkipTask() {
       this.$store.commit("disableTask", this.$store.state.task);
-      this.$store.dispatch("rollTask");
+      this.$store.dispatch("rollTaskAndTwist");
     },
     onSkipTwist(index) {
-      console.log("SKIP")
-      console.log(this.$store.state.twists)
-      console.log(index)
-      console.log(this.$store.state.twists[index])
       this.$store.commit("disableTwist", this.$store.state.twists[index]);
       this.$store.dispatch("rollTwist");
     },
     onTaskDone() {
       this.$emit("done");
     },
-    onRemoveReq(req) {
+    onRemoveReq(req, rerollTask) {
       this.$store.commit("removeRequirement", req);
       this.showSnackBar = true;
+      if (rerollTask) {
+        this.$store.dispatch("rollTaskAndTwist");
+      }
     },
     onAddTwist() {
       this.$store.commit("setNumTwists", 1);

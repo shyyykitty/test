@@ -2,8 +2,29 @@ import {createStore} from "vuex";
 import {Requirements} from "@/tasks/requirements";
 import {setSeed, Uniform} from "@/tasks/util";
 import {Tasks} from "@/tasks/tasks";
-import {useTheme} from "vuetify";
-import * as Themes from "@/themes";
+
+function getNextTask(state) {
+    const possibleTasks = Object.entries(Tasks)
+        .filter(([name, task]) => !task.requirements.some(req => !state.requirements.includes(req.name)))
+        .filter(([name, task]) => !state.history.includes(name))
+
+    const [name, task] = possibleTasks[Uniform(0, possibleTasks.length - 1)()];
+    return name;
+}
+
+function getNextTwists(state, task) {
+    const twists = [];
+    const possibleTwists = Object.entries(Tasks[task].twists).filter(
+        ([name, twist]) => !twist.requirements.some(req => !state.requirements.includes(req.name))
+    )
+
+    for (let i = 0; i < possibleTwists.length; i++) {
+        const idx = Uniform(0, possibleTwists.length - 1)();
+        twists.push(possibleTwists[idx][0]);
+        possibleTwists.splice(idx, 1);
+    }
+    return twists;
+}
 
 export const store = createStore({
     state() {
@@ -47,19 +68,20 @@ export const store = createStore({
                 saveState();
             }
         },
-        setTask(state, name) {
-            state.task = name;
+        setTwists(state, twists) {
+            state.twists = twists;
+            saveState();
+        },
+        setTaskAndTwists(state, {task, twists}) {
+            state.twists = twists;
+            state.task = task;
             state.numTwists = 0;
 
             if (state.history.length >= 3) {
                 state.history.shift();
             }
-            state.history.push(name);
+            state.history.push(task);
 
-            saveState();
-        },
-        setTwists(state, twists) {
-            state.twists = twists;
             saveState();
         },
         setSeed(state, seed) {
@@ -144,31 +166,18 @@ export const store = createStore({
         setTheme(state, name) {
             state.theme = name;
             saveState();
-        }
+        },
     },
     actions: {
-        rollTask({commit, state}) {
-            const possibleTasks = Object.entries(Tasks)
-                .filter(([name, task]) => !task.requirements.some(req => !state.requirements.includes(req.name)))
-                .filter(([name, task]) => !state.history.includes(name))
-
-            const [name, task] = possibleTasks[Uniform(0, possibleTasks.length - 1)()];
-            commit("setTask", name);
-        },
-
         rollTwist({commit, state}) {
-            const twists = [];
-            const possibleTwists = Object.entries(Tasks[state.task].twists).filter(
-                ([name, twist]) => !twist.requirements.some(req => !state.requirements.includes(req.name))
-            )
+            commit("setTwists", getNextTwists(state, state.task));
+        },
+        rollTaskAndTwist({commit, state}) {
+            const task = getNextTask(state);
+            const twists = getNextTwists(state, task);
 
-            for (let i = 0; i < possibleTwists.length; i++) {
-                const idx = Uniform(0, possibleTwists.length - 1)();
-                twists.push(possibleTwists[idx][0]);
-                possibleTwists.splice(idx, 1);
-            }
-
-            commit("setTwists", twists);
+            commit("setTaskAndTwists", {task, twists});
+            commit("resetTimer");
         }
     }
 });

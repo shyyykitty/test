@@ -44,3 +44,13 @@ export function humanTime(sec_num) {
 
     return `${hours < 10 ? "0" : ""}${hours}<small>h</small> ${minutes < 10 ? "0" : ""}${minutes}<small>m</small>`;
 }
+
+export async function toBase64(str) {
+  const base64url = await new Promise(r => {
+    const reader = new FileReader();
+    reader.onload = () => r(reader.result);
+    reader.readAsDataURL(new Blob([str]));
+  });
+
+  return base64url.slice(base64url.indexOf(',') + 1);
+}
