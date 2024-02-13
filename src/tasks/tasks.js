@@ -54,7 +54,7 @@ export const HumpPillowTask = new Task(
 
 export const SimpleEdgeTask = new Task(
     "Edge {N} times.",
-    [EdgeReq],
+    [EdgeReq, TouchingReq],
     {N: Uniform(2, 10)},
     {PinchNippleOnStopTwist, NakedTwist, ButtPlugTwist, MirrorTwist}
 )
@@ -154,7 +154,7 @@ export const EdgeAndPicsTask = new Task(
 
 export const RideEdgeTask = new Task(
     "You are allowed to edge only once today, so to ride it for as long as possible.",
-    [EdgeReq],
+    [EdgeReq, TouchingReq],
     {},
     {NakedTwist, ButtPlugTwist, NippleClampTwist, ContinueEdgingRuinTwist, MirrorTwist}
 )
