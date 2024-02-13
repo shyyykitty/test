@@ -2,20 +2,22 @@ import {createStore} from "vuex";
 import {Requirements} from "@/tasks/requirements";
 import {setSeed, Uniform} from "@/tasks/util";
 import {Tasks} from "@/tasks/tasks";
+import * as Modifiers from "@/tasks/modifiers";
+import modifier from "@/components/Modifier.vue";
 
-function getNextTask(state) {
+function getNextTask(state, getters) {
     const possibleTasks = Object.entries(Tasks)
-        .filter(([name, task]) => !task.requirements.some(req => !state.requirements.includes(req.name)))
+        .filter(([name, task]) => !task.requirements.some(req => !getters.finalRequirements.includes(req.name)))
         .filter(([name, task]) => !state.history.includes(name))
 
     const [name, task] = possibleTasks[Uniform(0, possibleTasks.length - 1)()];
     return name;
 }
 
-function getNextTwists(state, task) {
+function getNextTwists(state, task, getters) {
     const twists = [];
     const possibleTwists = Object.entries(Tasks[task].twists).filter(
-        ([name, twist]) => !twist.requirements.some(req => !state.requirements.includes(req.name))
+        ([name, twist]) => !twist.requirements.some(req => !getters.finalRequirements.includes(req.name))
     )
 
     for (let i = 0; i < possibleTwists.length; i++) {
@@ -48,6 +50,35 @@ export const store = createStore({
          */
         modifiers(state) {
             return state.modifiers;
+        },
+        requirementOverrides(state, getters) {
+            return getters.requirementOverrideAdded.concat(getters.requirementOverrideRemoved)
+        },
+        requirementOverrideRemoved(state) {
+            const overrides = [];
+
+            state.modifiers.forEach(mod => {
+                overrides.push(...Modifiers[mod.name].removeRequirements);
+            });
+
+            return overrides.map(req => req.name);
+        },
+        requirementOverrideAdded(state) {
+            const overrides = [];
+
+            state.modifiers.forEach(mod => {
+                overrides.push(...Modifiers[mod.name].addRequirements);
+            });
+
+            return overrides.map(req => req.name);
+        },
+        finalRequirements(state, getters) {
+            const removed = getters.requirementOverrideRemoved;
+            const added = getters.requirementOverrideAdded.filter(req => !state.requirements.includes(req));
+
+            return state.requirements
+                .filter(req => !removed.includes(req))
+                .concat(added);
         }
     },
     mutations: {
@@ -139,6 +170,22 @@ export const store = createStore({
                 debugger;
             }
 
+            /**
+             * @type Modifier
+             */
+            const modifier = Modifiers[name];
+
+            if (!modifier) {
+                debugger;
+            }
+
+            modifier.removeRequirements.forEach(req => {
+                this.commit("removeRequirement", req);
+            });
+            modifier.addRequirements.forEach(req => {
+                this.commit("addRequirement", req);
+            });
+
             if (state.modifiers.find(m => m.name === name)) {
                 // Overwrite modifier and reset timer
                 state.modifiers = state.modifiers.filter(m => m.name !== name);
@@ -172,9 +219,9 @@ export const store = createStore({
         rollTwist({commit, state}) {
             commit("setTwists", getNextTwists(state, state.task));
         },
-        rollTaskAndTwist({commit, state}) {
-            const task = getNextTask(state);
-            const twists = getNextTwists(state, task);
+        rollTaskAndTwist({commit, state, getters}) {
+            const task = getNextTask(state, getters);
+            const twists = getNextTwists(state, task, getters);
 
             commit("setTaskAndTwists", {task, twists});
             commit("resetTimer");

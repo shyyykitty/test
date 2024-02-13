@@ -1,8 +1,8 @@
 <template>
-  <v-list-item>
+  <v-list-item :disabled="$store.getters.requirementOverrides.includes(req.name)">
     <template v-if="checkbox" v-slot:prepend>
       <v-list-item-action>
-        <v-checkbox-btn :model-value="$store.state.requirements.includes(req.name)" color="primary"></v-checkbox-btn>
+        <v-checkbox-btn :model-value="$store.getters.finalRequirements.includes(req.name)" color="primary"></v-checkbox-btn>
       </v-list-item-action>
     </template>
 

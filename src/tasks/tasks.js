@@ -27,7 +27,7 @@ import {
     NippleClampTwist, ContinueEdgingRuinTwist, TouchIfWetTwist, TouchIfDropTwist, NoEdgingTwist
 } from "@/tasks/twists";
 import {Gaussian, Uniform} from "@/tasks/util";
-import {KeepLewdPicAsWallpaper} from "@/tasks/modifiers";
+import {KeepLewdPicAsWallpaperModifier, NoTouchModifier} from "@/tasks/modifiers";
 
 
 export const LewPicTask = new Task(
@@ -138,7 +138,8 @@ export const NoTouchTask = new Task(
     "Do not touch yourself, except for cleaning, for the next 24h.",
     [],
     {},
-    {ListenAudioPornTwist, WatchVideoPornTwist, SleepNakedTwist}
+    {ListenAudioPornTwist, WatchVideoPornTwist, SleepNakedTwist},
+    {NoTouchModifier}
 )
 
 export const EdgeAndPicsTask = new Task(
@@ -148,7 +149,7 @@ export const EdgeAndPicsTask = new Task(
     {},
     {NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, NippleClampTwist, RuinOrgasmAfterEdgeTwist,
         ContinueEdgingRuinTwist},
-    {KeepLewdPicAsWallpaper}
+    {KeepLewdPicAsWallpaperModifier}
 )
 
 export const RideEdgeTask = new Task(

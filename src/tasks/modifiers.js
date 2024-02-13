@@ -1,3 +1,5 @@
+import {TouchingReq} from "@/tasks/requirements";
+
 export class Modifier {
 
     /**
@@ -5,12 +7,17 @@ export class Modifier {
      * @param taskDuration {number|null}
      * @param timeDuration {number|null}
      * @param showProgress {boolean}
+     * @param addRequirements {Requirement[]}
+     * @param removeRequirements {Requirement[]}
      */
-    constructor(text, taskDuration = null, timeDuration = null, showProgress = true) {
+    constructor(text, taskDuration = null, timeDuration = null,
+                showProgress = true, addRequirements = [], removeRequirements = []) {
         this.text = text;
         this.taskDuration = taskDuration
         this.timeDuration = timeDuration;
         this.showProgress = showProgress;
+        this.addRequirements = addRequirements;
+        this.removeRequirements = removeRequirements;
     }
 }
 
@@ -28,10 +35,19 @@ export const CumAfterNextTaskModifier = new Modifier(
     1
 )
 
-export const KeepLewdPicAsWallpaper = new Modifier(
+export const KeepLewdPicAsWallpaperModifier = new Modifier(
     "Keep a lewd picture of yourself as your phone wallpaper.",
     null,
     24 * HOUR
+)
+
+export const NoTouchModifier = new Modifier(
+    "You are not allowed to touch sensitive areas.",
+    null,
+    24 * HOUR,
+    true,
+    [],
+    [TouchingReq]
 )
 
 /**
