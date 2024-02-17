@@ -50,6 +50,13 @@ export const NoTouchModifier = new Modifier(
     [TouchingReq]
 )
 
+export const SleepNakedModifier = new Modifier(
+    "You have to sleep naked.",
+    null,
+    24 * HOUR,
+    true,
+)
+
 /**
  * When a task is completed, add a modifier.
  * Modifiers are like twists, but lasts more than one task.

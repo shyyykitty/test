@@ -40,7 +40,8 @@ export default {
       timerValue: this.initialValue,
       paused: true,
       tabActive: true,
-      lastActive: null
+      lastActive: null,
+      unsubscribe: null
     }
   },
   watch: {
@@ -49,7 +50,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.subscribe((mutation) => {
+    this.unsubscribe = this.$store.subscribe((mutation) => {
       if (mutation.type === "tick" && !this.paused && this.tabActive) {
         this.timerValue = Math.max(0, this.timerValue - 1);
 
@@ -84,6 +85,9 @@ export default {
     });
 
     this.reset();
+  },
+  unmounted() {
+    this.unsubscribe();
   },
   methods: {
     reset() {

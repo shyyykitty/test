@@ -9,6 +9,7 @@ import {
     RuinOrgasmReq, TouchingReq,
     VideoPornReq
 } from "@/tasks/requirements";
+import {SleepNakedModifier} from "@/tasks/modifiers";
 
 export const PinchNippleOnStopTwist = new Twist(
     "Each time you have to stop, pinch your nipples for {N} seconds.",
@@ -70,6 +71,10 @@ export const ListenAudioPornTwist = new Twist(
 
 export const SleepNakedTwist = new Twist(
     "You have to sleep naked for the duration of the task.",
+    [],
+    {},
+    {},
+    {SleepNakedModifier}
 )
 
 export const VerySlowlyTwist = new Twist(

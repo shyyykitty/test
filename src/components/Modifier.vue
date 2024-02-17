@@ -1,15 +1,24 @@
 <template>
   <v-card style="margin-bottom: 1em">
-    <v-card-text>
-      <p>{{ text }}</p>
-      <br>
+    <v-card-text :class="{completed}">
+      <p><b>{{completed ? 'Completed: ' : ''}}</b>{{ text }}</p>
 
-      <v-progress-linear :model-value="progress * 100" color="secondary" height="15">
-        <template v-slot:default="{ value }">
-          <span v-html="label"></span>
-        </template>
-      </v-progress-linear>
+      <template v-if="!completed">
+
+        <br>
+        <v-progress-linear :model-value="progress * 100" color="secondary" height="22">
+          <template v-slot:default="{ value }">
+            <span v-html="label"></span>
+          </template>
+        </v-progress-linear>
+      </template>
     </v-card-text>
+
+    <v-card-actions v-if="completed">
+      <v-btn @click="onDismiss()" color="secondary" variant="elevated" style="margin-left: auto;">
+        Dismiss
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -23,32 +32,37 @@ export default {
   data() {
     return {
       progress: 0,
-      label: ""
+      label: "",
+      unsubscribe: null
     }
   },
   mounted() {
     this.update();
 
-    this.$store.subscribe((mutation) => {
+    this.unsubscribe = this.$store.subscribe((mutation) => {
       if (mutation.type === "tick") {
         this.update();
       }
     });
   },
+  unmounted() {
+    this.unsubscribe();
+  },
   computed: {
     text() {
       return Modifiers[this.modifier.name].text
+    },
+    completed() {
+      return this.progress >= 1.0;
     }
   },
   methods: {
     update() {
       this.progress = this.getProgress();
       this.label = this.getLabel();
-
-      if (this.progress >= 1.0) {
-        // TODO
-        console.log("DONE!!")
-      }
+    },
+    onDismiss() {
+      this.$store.commit("removeModifier", this.modifier.name)
     },
     getProgress() {
       /** @type Modifier */
@@ -78,5 +92,7 @@ export default {
 </script>
 
 <style scoped>
-
+.completed {
+  opacity: 0.5;
+}
 </style>

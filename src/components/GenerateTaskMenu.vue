@@ -75,8 +75,15 @@ export default {
       this.$store.commit("incrementCompletedTasks")
 
       const task = Tasks[this.$store.state.task];
+
+      // Create modifiers
       Object.keys(task.modifiers).forEach(name => {
         this.$store.commit("createModifier", name);
+      });
+      this.twists.slice(0, this.$store.state.numTwists).forEach(twist => {
+        Object.keys(twist.modifiers).forEach(name => {
+          this.$store.commit("createModifier", name);
+        });
       });
 
       this.rollTask();

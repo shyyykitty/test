@@ -201,7 +201,7 @@ export const store = createStore({
             saveState();
         },
         removeModifier(state, name) {
-            const index = state.modifiers.indexOf(m => m.name === name);
+            const index = state.modifiers.findIndex(m => m.name === name);
 
             if (index === -1) {
                 debugger;
