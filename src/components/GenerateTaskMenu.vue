@@ -16,7 +16,9 @@
 
     <br>
 
-    <Task v-if="task" :task="task" :twists="twists" @done="onTaskDone()"></Task>
+    <v-fade-transition hide-on-leave>
+      <Task v-if="task && !loading" :task="task" :twists="twists" @done="onTaskDone()"></Task>
+    </v-fade-transition>
   </div>
 </template>
 <script>
@@ -56,8 +58,16 @@ export default {
     }
   },
   methods: {
+    rollTask() {
+      this.loading = true;
+      window.setTimeout(() => {
+        this.$store.dispatch("rollTaskAndTwist").then(() => {
+          this.loading = false;
+        });
+      }, 100);
+    },
     onGenerateClick() {
-      this.$store.dispatch("rollTaskAndTwist");
+      this.rollTask();
 
       // this.$store.commit("setSeed", `${Math.random()}`);
     },
@@ -69,7 +79,7 @@ export default {
         this.$store.commit("createModifier", name);
       });
 
-      this.$store.dispatch("rollTaskAndTwist");
+      this.rollTask();
     }
   }
 }
