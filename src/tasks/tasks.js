@@ -1,4 +1,4 @@
-import {Task, Twist} from "@/tasks/Task";
+import {Subtask, Twist} from "@/tasks/Task";
 import {
     AudioPornReq, ButtPlugReq,
     AnalReq, ClitReq,
@@ -28,38 +28,41 @@ import {
 } from "@/tasks/twists";
 import {Gaussian, Uniform} from "@/tasks/util";
 import {KeepLewdPicAsWallpaperModifier, NoTouchModifier} from "@/tasks/modifiers";
+import {ca} from "vuetify/locale";
 
 
-export const LewPicTask = new Task(
+export const LewdPic = new Subtask(
     "Take {N} lewd pictures of yourself.",
     [PictureReq],
     {N: Gaussian(4, 2)},
     {NakedTwist, ButtPlugTwist, EdgeBeforeTaskTwist}
 )
 
-export const HumpObjectsTask = new Task(
+export const HumpObjectsTask = new Subtask(
     "Spend {N} minutes humping different objects in your room.",
     [],
     {N: Gaussian(12, 2)},
     {NakedTwist, AllowedCumTwist, PinchNippleOnStopTwist, ButtPlugTwist, EdgeBeforeTaskTwist}
 )
 
-export const HumpPillowTask = new Task(
+export const HumpPillowTask = new Subtask(
     "Go hump a pillow for {N} minutes.",
     [PillowReq],
     {N: Uniform(5, 20)},
-    {PinchNippleOnStopTwist, AllowedCumTwist, ButtPlugTwist, NakedTwist, RuinOrgasmAfterEdgeTwist,
-        EdgeBeforeTaskTwist, MirrorTwist, VerySlowlyTwist}
+    {
+        PinchNippleOnStopTwist, AllowedCumTwist, ButtPlugTwist, NakedTwist, RuinOrgasmAfterEdgeTwist,
+        EdgeBeforeTaskTwist, MirrorTwist, VerySlowlyTwist
+    }
 )
 
-export const SimpleEdgeTask = new Task(
+export const SimpleEdgeTask = new Subtask(
     "Edge {N} times.",
     [EdgeReq, TouchingReq],
     {N: Uniform(2, 10)},
     {PinchNippleOnStopTwist, NakedTwist, ButtPlugTwist, MirrorTwist}
 )
 
-export const VibeDenialTask = new Task(
+export const VibeDenialTask = new Subtask(
     "Hold your vibrator on yourself for {N} minutes, after you cum," +
     " keep it on and add 1 day of denial for each remaining minute.",
     [CumReq, VibeReq, PotReq, TouchingReq],
@@ -67,14 +70,14 @@ export const VibeDenialTask = new Task(
     {EdgeBeforeTaskTwist, MirrorTwist, ButtPlugTwist}
 )
 
-export const SpankClitTask = new Task(
+export const SpankClitTask = new Subtask(
     "Spread your legs as wide as possible, and spank your clit {N} times.",
     [VaginaReq, ClitReq],
     {N: Gaussian(20, 4)},
     {NakedTwist, ButtPlugTwist, EdgeBeforeTaskTwist, MirrorTwist}
 )
 
-export const CrossDressPicsTask = new Task(
+export const CrossDressPicsTask = new Subtask(
     "Wear something that is typically worn by the opposite gender, " +
     "take some cute selfies in your slutty cross-dress outfit.",
     [CrossDressReq, PictureReq],
@@ -82,7 +85,7 @@ export const CrossDressPicsTask = new Task(
     {EdgeBeforeTaskTwist, ButtPlugTwist}
 )
 
-export const CumFromAssPlayTask = new Task(
+export const CumFromAssPlayTask = new Subtask(
     "Get on all fours and fuck your ass with a finger or dildo for at least 10 minutes, or until" +
     " you cum from the stimulation.",
     [CumReq, AnalReq, TouchingReq],
@@ -90,7 +93,7 @@ export const CumFromAssPlayTask = new Task(
     {CumWithinXMinTwist, NakedTwist, EdgeBeforeTaskTwist, MirrorTwist}
 )
 
-export const SuckDildoTask = new Task(
+export const SuckDildoTask = new Subtask(
     "Practice giving head to a dildo or two fingers for {N} minutes. Go as deep as possible.",
     [],
     {N: Uniform(5, 20)},
@@ -98,35 +101,35 @@ export const SuckDildoTask = new Task(
 )
 
 
-export const EdgeMakeupBrushTask = new Task(
+export const EdgeMakeupBrushTask = new Subtask(
     "Edge {N} times by using a small brush on yourself.",
     [SmallBrushReq, EdgeReq, TouchingReq],
     {N: Uniform(3, 8)},
     {NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, RuinOrgasmAfterEdgeTwist, MirrorTwist, VerySlowlyTwist}
 )
 
-export const WashingMachineDildoTask = new Task(
+export const WashingMachineDildoTask = new Subtask(
     "Sit on your washing machine while you have your dildo in for {N} minutes.",
     [WashingMachineReq, DildoReq, TouchingReq],
     {N: Uniform(8, 20)},
     {NakedTwist, PinchNippleOnStopTwist, AllowedCumTwist, EdgeBeforeTaskTwist}
 )
 
-export const VibeAndRideDildoTask = new Task(
+export const VibeAndRideDildoTask = new Subtask(
     "Use a vibrator to tease yourself while you ride your dildo for {N} minutes.",
     [DildoReq, VibeReq, PenetrationReq, TouchingReq],
     {N: Uniform(5, 20)},
     {PinchNippleOnStopTwist, NakedTwist, EdgeBeforeTaskTwist}
 )
 
-export const NipplePlayTask = new Task(
+export const NipplePlayTask = new Subtask(
     "Play with your nipples for {N} minutes.",
     [NipplesReq, TouchingReq],
     {N: Uniform(3, 15)},
     {NakedTwist, EdgeBeforeTaskTwist, AllowedCumTwist, VerySlowlyTwist, TouchIfWetTwist}
 )
 
-export const AudioPublicTask = new Task(
+export const AudioPublicTask = new Subtask(
     "Go to a public place (store, public transport etc.), put on headphones and listen to audio porn for at" +
     "least 10 minutes.",
     [HeadphonesReq, AudioPornReq],
@@ -134,7 +137,7 @@ export const AudioPublicTask = new Task(
     {EdgeBeforeTaskTwist, ButtPlugTwist}
 )
 
-export const NoTouchTask = new Task(
+export const NoTouchTask = new Subtask(
     "Do not touch yourself, except for cleaning, for the next 24h.",
     [],
     {},
@@ -142,24 +145,26 @@ export const NoTouchTask = new Task(
     {NoTouchModifier}
 )
 
-export const EdgeAndPicsTask = new Task(
+export const EdgeAndPicsTask = new Subtask(
     "Edge yourself as many times as possible for the next 15 minutes, then take lewd a picture of yourself " +
     "and set it as your wallpaper on your phone for the next 24h.",
     [EdgeReq, PictureReq, TouchingReq],
     {},
-    {NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, NippleClampTwist, RuinOrgasmAfterEdgeTwist,
-        ContinueEdgingRuinTwist},
+    {
+        NakedTwist, ButtPlugTwist, PinchNippleOnStopTwist, NippleClampTwist, RuinOrgasmAfterEdgeTwist,
+        ContinueEdgingRuinTwist
+    },
     {KeepLewdPicAsWallpaperModifier}
 )
 
-export const RideEdgeTask = new Task(
+export const RideEdgeTask = new Subtask(
     "You are allowed to edge only once today, so to ride it for as long as possible.",
     [EdgeReq, TouchingReq],
     {},
     {NakedTwist, ButtPlugTwist, NippleClampTwist, ContinueEdgingRuinTwist, MirrorTwist}
 )
 
-export const LowIntensityVibeTask = new Task(
+export const LowIntensityVibeTask = new Subtask(
     "Hold a vibrator on yourself on the absolute lowest setting. If you reach the edge, hold it for as long" +
     " as possible without cumming, then stop. Otherwise, stop after {N} minutes.",
     [EdgeReq, VibeReq, TouchingReq],
@@ -167,15 +172,17 @@ export const LowIntensityVibeTask = new Task(
     {NakedTwist, ButtPlugTwist, NippleClampTwist}
 )
 
-export const DildoStanding = new Task(
+export const DildoStanding = new Subtask(
     "Fuck yourself with a dildo while standing for at least {N} minutes.",
     [PenetrationReq, TouchingReq],
     {N: Uniform(5, 15)},
-    {NippleClampTwist, VerySlowlyTwist, MirrorTwist, NakedTwist, EdgeBeforeTaskTwist,
-        PinchNippleOnStopTwist, TouchIfDropTwist, AllowedCumTwist}
+    {
+        NippleClampTwist, VerySlowlyTwist, MirrorTwist, NakedTwist, EdgeBeforeTaskTwist,
+        PinchNippleOnStopTwist, TouchIfDropTwist, AllowedCumTwist
+    }
 )
 
-export const PublicPlug = new Task(
+export const PublicPlug = new Subtask(
     "Go for a walk while wearing a butt plug. When this task is done, you are allowed to touch and edge " +
     "until you remove the plug.",
     [ButtPlugReq, TouchingReq],
@@ -183,7 +190,7 @@ export const PublicPlug = new Task(
     {ListenAudioPornTwist, EdgeBeforeTaskTwist}
 )
 
-export const NipplePlayStep1Tas = new Task(
+export const NipplePlayStep1Task = new Subtask(
     "Caress and play with your body without touching your crotch area until you are wet. " +
     "Remove your shirt, scoop up the wetness with your fingers on both hands and very gently roll your nipples " +
     "between your index and thumb. Close your eyes and enjoy the feeling. Do this for {N} minutes.",
@@ -192,7 +199,7 @@ export const NipplePlayStep1Tas = new Task(
     {NakedTwist,}
 )
 
-export const NipplePlayStep2Task = new Task(
+export const NipplePlayStep2Task = new Subtask(
     "Wipe down your fingers and nipples. Hold your nipples between your index and thumb for a few seconds, " +
     "then pinch hard enough to make you wince. Gently hold them again for 2 seconds, then pinch for 2 seconds. Repeat for " +
     "{N} minutes, while increasing the intensity if can handle it. After the this is done, you are allowed to touch " +
@@ -202,7 +209,7 @@ export const NipplePlayStep2Task = new Task(
     {ButtPlugTwist, AllowedCumTwist}
 )
 
-export const NipplePlayStep3Task = new Task(
+export const NipplePlayStep3Task = new Subtask(
     "Twist your nipples to the left a few degrees, hold for a few seconds, then twist to the right. Repeat " +
     "while increasing the angle each time until you reach 180°. There are no breaks in between twists. After the task " +
     "is done, you are allowed to touch yourself with your hands for exactly {X} seconds before starting the next task.",
@@ -211,7 +218,7 @@ export const NipplePlayStep3Task = new Task(
     {AllowedCumTwist}
 )
 
-export const NipplePlayStep4Task = new Task(
+export const NipplePlayStep4Task = new Subtask(
     "Pinch and slowly pull your nipples as far away from your body as possible. " +
     "Hold for a few seconds, then pull even further, then let go. Repeat 4 times, and alternate between pulling " +
     "them forward and to the side. Repeat 4 times, but instead of letting go, slowly loosen your grip until " +
@@ -223,7 +230,7 @@ export const NipplePlayStep4Task = new Task(
     {AllowedCumTwist}
 )
 
-export const NipplePlayStep5Task = new Task(
+export const NipplePlayStep5Task = new Subtask(
     "Gently hold your right nipple and slowly rub it with your other hand for a few seconds. Stop rubbing and " +
     "flick your nipple 5 times. Use the hand that was holding it to pinch your nipple with your middle finger and " +
     "thumb, then do a finger click motion 5 times. Repeat for the left nipple. Now do {N} flicks and {N} finger clicks on " +
@@ -232,7 +239,7 @@ export const NipplePlayStep5Task = new Task(
     {N: Uniform(5, 12), X: Gaussian(10, 5)},
 )
 
-export const NipplePlayStep6Task = new Task(
+export const NipplePlayStep6Task = new Subtask(
     "Good job! You are allowed to touch for {X} seconds before starting this task. [Actually, you " +
     "can touch for 20 seconds.] [If you are reading this sentence, then you lost your chance to touch, sorry!][ " +
     "Now, move to a kneeling position with your legs spread and start pinching your nipples hard enough to make you " +
@@ -247,7 +254,7 @@ export const NipplePlayStep6Task = new Task(
     {NoEdgingTwist}
 )
 
-export const JoiDildoTask = new Task(
+export const JoiDildoTask = new Subtask(
     "If you have a chastity device, wear it now. [Place a dildo right above your cock, use lube and start " +
     "gently stroking. Take your time and enjoy the feeling.] [Find a JOI audio or video, listen with headphones and " +
     "follow the instructions. Close your eyes and imagine that you are really stroking yourself. Make a performance. " +
@@ -263,7 +270,7 @@ export const JoiDildoTask = new Task(
     {ButtPlugTwist, NakedTwist, EdgeBeforeTaskTwist, NippleClampTwist}
 )
 
-export const CumTask = new Task(
+export const CumTask = new Subtask(
     "[As soon as you are done reading this sentence, strip completely naked and start touching nice and fast.] " +
     "[Get to the edge as quickly as you can, then and add one twist to this task.]",
     [EdgeReq, TouchingReq],
@@ -298,7 +305,7 @@ export const CumTask = new Task(
     }
 )
 
-export const DenialVibe = new Task(
+export const DenialVibe = new Subtask(
     "Make sure that your vibrator is fully charged and ready to go. Tie both of your legs firmly, either" +
     " together or to your bed. Caress yourself over your thighs and chest. Bring yourself to the edge using your" +
     " favorite toy (you are not allowed to use the vibrator yet) or technique. Edge again {N} times, make yourself" +
@@ -314,7 +321,7 @@ export const DenialVibe = new Task(
 
 
 // TODO: Add multiple steps
-export const CumInPants = new Task(
+export const CumInPants = new Subtask(
     "Get two pairs of underwear and put on your pants so that you have 3 layers of fabric on you. Start " +
     "rubbing through your clothes. You can use a vibrator. If you reach the edge, keep going and attempt to make" +
     " yourself cum in your underwear. After {N} minutes, remove a layer and continue rubbing. After {N}*3 minutes," +
@@ -325,43 +332,79 @@ export const CumInPants = new Task(
     {ButtPlugTwist, NippleClampTwist}
 )
 
-export const RecordAndEdgeToVideo = new Task(
+export const RecordAndEdgeToVideo = new Subtask(
     "Pleasure yourself and video record it. You can use your favourite toy. You can edge up to 2 times.BREAK" +
     "Edge once while watching the video.",
     [PictureReq, EdgeReq, TouchingReq]
 )
 
+
+class Action {
+    constructor (step, label = null, returnTo = null) {
+        if (label === null && step === "$end") {
+            label = "Complete task";
+        }
+
+        if (label === null) {
+            label = "Continue";
+        }
+
+        this.label = label;
+        this.step = step;
+        this.returnTo = returnTo;
+    }
+}
+
+class Step {
+    /**
+     * @param subtask {Object.<string: Subtask>}}
+     * @param actions {{label: string, step: string}[]}
+     * @param prob {number|null}
+     */
+    constructor(subtask, actions, prob = 0) {
+        this.name = Object.keys(subtask)[0];
+        this.subtask = Object.values(subtask)[0];
+        this.actions = actions;
+        this.prob = prob;
+    }
+}
+
+const End = new Action("$end");
+const Return = new Action("$return");
+const Continue = step => new Action(step);
+
 export const Tasks = {
-    CumInPants,
-    DenialVibe,
-    LewPicTask,
-    HumpPillowTask,
-    SimpleEdgeTask,
-    VibeDenialTask,
-    SpankClitTask,
-    CrossDressPicsTask,
-    CumFromAssPlayTask,
-    SuckDildoTask,
-    EdgeMakeupBrushTask,
-    WashingMachineDildoTask,
-    HumpObjectsTask,
-    VibeAndRideDildoTask,
-    AudioPublicTask,
-    NipplePlayTask,
-    NoTouchTask,
-    EdgeAndPicsTask,
-    RideEdgeTask,
-    LowIntensityVibeTask,
-    DildoStanding,
-    PublicPlug,
-    // [
-    //     NipplePlayStep1Task,
-    //     NipplePlayStep2Task,
-    //     NipplePlayStep3Task,
-    //     NipplePlayStep4Task,
-    //     NipplePlayStep5Task,
-    //     NipplePlayStep6Task,
-    // ],
-    JoiDildoTask,
-    CumTask
+    // NipplePlayGame: {
+    //     start: [Step({NipplePlayStep1Task}, [Action("2")])],
+    //     2: [Step({NipplePlayStep2Task}, [Action("3")])],
+    //     3: [Step({NipplePlayStep3Task}, [Action("4")])],
+    //     4: [Step({NipplePlayStep4Task}, [Action("5")])],
+    //     5: [Step({NipplePlayStep5Task}, [Action("6")])],
+    //     6: [Step({NipplePlayStep6Task}, [Action("end")])],
+    // },
+    test1: {
+        $start: [
+            // new Step({LewdPic}, [End]),
+            new Step({CumInPants}, [new Action("punishment", "Go to punishment", "2"), Continue("2")]),
+        ],
+        2: [
+            new Step({WashingMachineDildoTask}, [Continue("3")]),
+            // new Step({SuckDildoTask}, [End]),
+        ],
+        3: [
+            // new Step({WashingMachineDildoTask}, [Continue("2")]),
+            new Step({SuckDildoTask}, [new Action("punishment", "Go to punishment", "$end"), End]),
+        ],
+        punishment: [
+            new Step({HumpPillowTask}, [new Action("punishment2", "Go to punishment2"), Return]),
+        ],
+        punishment2: [
+            new Step({HumpPillowTask}, [Return]),
+        ]
+    },
+    // LewPicTask: {
+    //     $start: [
+    //         new Step({LewdPic}, [new Action("$end")])
+    //     ]
+    // }
 }

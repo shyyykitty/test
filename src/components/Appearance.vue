@@ -12,6 +12,11 @@
                     v-model="theme">
           </v-select>
         </v-list-item>
+        <v-list-item>
+          <v-checkbox
+              color="primary"
+              label="Developper mode" v-model="debug"></v-checkbox>
+        </v-list-item>
       </v-list>
     </v-expansion-panel-text>
   </v-expansion-panel>
@@ -22,6 +27,14 @@ import {mapGetters} from "vuex";
 export default {
   name: "Appearance",
   computed: {
+    debug: {
+      get() {
+        return this.$store.state.debug;
+      },
+      set(val) {
+        this.$store.commit("setDebug", val);
+      }
+    },
     theme: {
       get() {
         return this.$store.state.theme;

@@ -1,50 +1,156 @@
 import {createStore} from "vuex";
 import {Requirements} from "@/tasks/requirements";
-import {setSeed, Uniform} from "@/tasks/util";
+import {setSeed, Uniform, generateGraph, getValidPaths, randomSeed} from "@/tasks/util";
 import {Tasks} from "@/tasks/tasks";
 import * as Modifiers from "@/tasks/modifiers";
-import modifier from "@/components/Modifier.vue";
+import * as Twists from "@/tasks/twists";
+
+
+function hasRequirements(task, requirements) {
+
+    const nodes = generateGraph(task);
+    const paths = getValidPaths(nodes);
+
+    // If at least one path is ok
+    return paths.some(path => {
+        // If every requirement of every subtask in path is met
+        return path.every(subtask =>
+            subtask.requirements.every(req => requirements.includes(req.name))
+        )
+    });
+}
 
 function getNextTask(state, getters) {
-    const possibleTasks = Object.entries(Tasks)
-        .filter(([name, task]) => !task.requirements.some(req => !getters.finalRequirements.includes(req.name)))
-        .filter(([name, task]) => !state.history.includes(name))
+    const reqs = getters.finalRequirements;
 
-    const [name, task] = possibleTasks[Uniform(0, possibleTasks.length - 1)()];
+    let possibleTasks = Object.entries(Tasks)
+        .filter(([_, task]) => hasRequirements(task, reqs))
+        .filter(([name, _]) => !state.history.includes(name))
+
+    if (possibleTasks.length === 0) {
+        // Remove history filter
+        possibleTasks = Object.entries(Tasks)
+            .filter(([_, task]) => hasRequirements(task, reqs));
+    }
+
+    if (possibleTasks.length === 0) {
+        // FIXME
+        debugger;
+    }
+
+    const [name, _] = possibleTasks[Uniform(0, possibleTasks.length - 1)()];
     return name;
 }
 
-function getNextTwists(state, task, getters) {
-    const twists = [];
-    const possibleTwists = Object.entries(Tasks[task].twists).filter(
-        ([name, twist]) => !twist.requirements.some(req => !getters.finalRequirements.includes(req.name))
-    )
+function getNextSubtask(state, getters) {
+    const possibleSubtasks = Object.entries(getters.possibleSteps)
+        .filter(([_, step]) => step.subtask.requirements.every(req => getters.finalRequirements.includes(req.name)))
+        .filter(([_, step]) => !state.disabledTasks.includes(step.name))
 
-    for (let i = 0; i < possibleTwists.length; i++) {
-        const idx = Uniform(0, possibleTwists.length - 1)();
-        twists.push(possibleTwists[idx][0]);
-        possibleTwists.splice(idx, 1);
+    if (possibleSubtasks.length === 0) {
+        // FIXME
+        debugger
     }
-    return twists;
+
+    // TODO: use the .probabilities
+    // https://stackoverflow.com/a/57130749
+    const [i, _] = possibleSubtasks[Uniform(0, possibleSubtasks.length - 1)()];
+
+    return Number(i);
+}
+
+function getNextTwist(state, getters) {
+    const possibleTwists = getters.possibleTwists;
+
+    if (possibleTwists.length === 0) {
+        return null;
+    }
+
+    const [name, _] = possibleTwists[Uniform(0, possibleTwists.length - 1)()];
+
+    return name;
 }
 
 export const store = createStore({
     state() {
         return {
-            requirements: [],
-            twists: [],
-            numTwists: 0,
-            task: null,
             seed: null,
-            history: [],
-            completedTasks: 0,
+            taskName: null,
+            stepName: null,
+            backStack: [],
+            returnTo: null,
+            subtaskIndex: null,
+            twistName: null,
+            modifiers: [],
+
             disabledTasks: [],
             disabledTwists: [],
-            modifiers: [],
-            theme: "pink"
+            requirements: [],
+
+            theme: "pink",
+            debug: true,
+
+            history: [],
+            completedTasks: 0,
+            
+            taskLoading: false,
         }
     },
     getters: {
+        task(state) {
+            if (state.taskName === null) {
+                return null;
+            }
+            return Tasks[state.taskName];
+        },
+        twist(state) {
+            if (state.twistName === null) {
+                return null;
+            }
+            return Twists[state.twistName];
+        },
+        possibleTwists(state, getters) {
+            if (!getters.subtask) {
+                return [];
+            }
+
+            return Object.entries(getters.subtask.twists)
+                .filter(([_, twist]) => twist.requirements.every(req => getters.finalRequirements.includes(req.name)))
+                .filter(([name, _]) => !state.disabledTwists.includes(name))
+        },
+        subtask(state, getters) {
+            return getters._step?.subtask;
+        },
+        subtaskName(state, getters) {
+            return getters._step?.name;
+        },
+        _step(state) {
+            if (state.taskName === null || state.stepName === null || state.subtaskIndex === null) {
+                return null;
+            }
+            return Tasks[state.taskName][state.stepName][state.subtaskIndex];
+        },
+        stepActions(state, getters) {
+            /**
+             * @type {Step}
+             */
+            const step = getters._step;
+            if (!step) {
+                return null;
+            }
+
+            return step.actions;
+        },
+        /**
+         * @returns Step[]
+         */
+        possibleSteps(state) {
+            if (state.taskName === null || state.stepName === null) {
+                return null;
+            }
+            return Tasks[state.taskName][state.stepName];
+        },
+
         /**
          * @returns ModifierInstance[]
          */
@@ -79,11 +185,35 @@ export const store = createStore({
             return state.requirements
                 .filter(req => !removed.includes(req))
                 .concat(added);
+        },
+        modifiersOnTaskComplete(state, getters) {
+            const subtask = getters.subtask;
+            const twist = getters.twist;
+            
+            const modifiers = [];
+
+            if (subtask) {
+                Object.keys(subtask.modifiers).forEach(name => {
+                    modifiers.push(name);
+                });
+            }
+            if (twist) {
+                Object.keys(twist.modifiers).forEach(name => {
+                    modifiers.push(name);
+                });
+            }
+
+            return modifiers;
         }
     },
     mutations: {
+        setDebug(state, value) {
+            state.debug = value;
+        },
         load(state, newState) {
             Object.assign(state, newState)
+            setSeed(state.seed);
+            state.taskLoading = false;
         },
         addRequirement(state, req) {
             if (!state.requirements.includes(req.name)) {
@@ -99,29 +229,31 @@ export const store = createStore({
                 saveState();
             }
         },
-        setTwists(state, twists) {
-            state.twists = twists;
+        setTwist(state, name) {
+            state.twistName = name;
             saveState();
         },
-        setTaskAndTwists(state, {task, twists}) {
-            state.twists = twists;
-            state.task = task;
-            state.numTwists = 0;
+        setStep(state, name) {
+            state.stepName = name;
+            saveState();
+        },
+        setSubtask(state, index) {
+            state.subtaskIndex = index;
+            saveState();
+        },
+        setTask(state, name) {
+            state.taskName = name;
 
             if (state.history.length >= 3) {
                 state.history.shift();
             }
-            state.history.push(task);
+            state.history.push(name);
 
             saveState();
         },
         setSeed(state, seed) {
             state.seed = seed;
             setSeed(seed)
-            saveState();
-        },
-        setNumTwists(state, num) {
-            state.numTwists = num;
             saveState();
         },
         tick(state) {
@@ -132,8 +264,9 @@ export const store = createStore({
         },
         incrementCompletedTasks(state) {
             state.completedTasks += 1;
+            saveState();
         },
-        disableTask(state, task) {
+        disableSubtask(state, task) {
             if (!task) {
                 debugger
             }
@@ -164,6 +297,7 @@ export const store = createStore({
             if (state.disabledTwists.includes(task)) {
                 state.disabledTwists.splice(state.disabledTwists.indexOf(task), 1);
             }
+            saveState();
         },
         createModifier(state, name) {
             if (!name) {
@@ -214,17 +348,100 @@ export const store = createStore({
             state.theme = name;
             saveState();
         },
+        pushStep(state) {
+            state.backStack.push({
+                stepName: state.stepName,
+                subtaskIndex: state.subtaskIndex,
+                twistName: state.twistName,
+                returnTo: state.returnTo,
+                seed: state.seed,
+                completedTasks: state.completedTasks,
+                modifiers: state.modifiers
+            });
+            saveState();
+        },
+        popStep(state) {
+            Object.assign(state, state.backStack.pop());
+            setSeed(state.seed);
+            saveState();
+        },
+        resetBackStack(state) {
+            state.backStack.length = 0;
+            saveState();
+        },
+        setReturnTo(state, name) {
+            state.returnTo = name;
+            saveState();
+        },
+        setTaskLoading(state, loading) {
+            state.taskLoading = loading;
+        }
     },
     actions: {
-        rollTwist({commit, state}) {
-            commit("setTwists", getNextTwists(state, state.task));
+        popStep({state, commit}) {
+            const topOfStack = state.backStack[state.backStack.length-1];
+            commit("popStep");
+            return topOfStack;
         },
-        rollTaskAndTwist({commit, state, getters}) {
-            const task = getNextTask(state, getters);
-            const twists = getNextTwists(state, task, getters);
+        /**
+         * @param commit
+         * @param state
+         * @param dispatch
+         * @param action {Action}
+         */
+        async doAction({commit, state, dispatch, getters}, action) {
 
-            commit("setTaskAndTwists", {task, twists});
+            if (action.step === "$back" || (action.step === "$return" && state.returnTo === null)) {
+                commit("popStep");
+                return;
+            }
+
+            let step = action.step === "$return"
+                ? state.returnTo
+                : action.step;
+
+            if (step === "$end") {
+
+                // Create modifiers
+                getters.modifiersOnTaskComplete.forEach(name => {
+                    commit("createModifier", name);
+                });
+
+                await dispatch("generateTask");
+                return;
+            }
+
+            commit("pushStep");
+
+            commit("incrementCompletedTasks");
+            commit("setReturnTo", action.returnTo);
+            commit("setSubtask", null);
+            commit("setStep", step);
+            await dispatch("rerollSubtask");
+        },
+        rollTwist({commit, state, getters}) {
+            commit("setTwist", getNextTwist(state, getters));
+        },
+        async rerollSubtask({commit, state, getters}) {
+            commit("setSubtask", getNextSubtask(state, getters))
+            commit("setSeed", randomSeed());
+            commit("setTwist", null);
+        },
+
+        async generateTask({commit, state, getters}) {
+
+            commit("setTaskLoading", true);
+            await new Promise(r => setTimeout(r, 100));
+            
+            commit("setTask", getNextTask(state, getters));
+            commit("setStep", "$start");
+            commit("setSubtask", getNextSubtask(state, getters))
+            commit("setSeed", randomSeed());
+            commit("setTwist", null);
+
+            commit("resetBackStack");
             commit("resetTimer");
+            commit("setTaskLoading", false);
         }
     }
 });

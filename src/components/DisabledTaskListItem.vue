@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip :text="tooltip">
+  <v-tooltip :text="tooltip" :max-width="400">
     <template v-slot:activator="{ props }">
       <v-list-item v-bind="props">
         <v-list-item-title>{{ name }}</v-list-item-title>
@@ -16,8 +16,8 @@
   </v-tooltip>
 </template>
 <script>
-import {Tasks} from "@/tasks/tasks";
 import * as Twists from "@/tasks/twists";
+import * as Subtasks from "@/tasks/tasks";
 
 export default {
   name: "DisabledTaskListItem",
@@ -36,7 +36,7 @@ export default {
         return Twists[this.name].template;
       }
 
-      return Tasks[this.name].template;
+      return Subtasks[this.name].template;
     }
   },
   methods: {

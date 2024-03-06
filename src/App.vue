@@ -33,11 +33,12 @@
 
 <script>
 import {loadState} from "@/store/store";
-import {setSeed, toBase64} from "@/tasks/util";
+import {setSeed} from "@/tasks/util";
 import RequirementList from "@/components/RequirementList.vue";
 import DisabledTaskList from "@/components/DisabledTaskList.vue";
 import DangerZone from "@/components/DangerZone.vue";
 import Appearance from "@/components/Appearance.vue";
+
 
 export default {
   name: "App",
@@ -47,14 +48,15 @@ export default {
     RequirementList,
     DisabledTaskList
   },
-  async created() {
+  created: async function () {
     loadState();
     setSeed(this.$store.state.seed)
 
-    const s = JSON.stringify(this.$store.state);
-    const b = await toBase64(s);
+    // const s = JSON.stringify(this.$store.state);
+    // const b = await toBase64(s);
+    //
+    // console.log("{" + b + "}")
 
-    console.log("{" + b + "}")
   },
   data() {
     return {

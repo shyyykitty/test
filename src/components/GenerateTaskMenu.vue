@@ -1,9 +1,9 @@
 <template>
   <div>
-    <v-card v-if="!task">
+    <v-card v-if="!$store.getters.task">
       <v-card-title>Generate task</v-card-title>
       <v-card-text>
-        <template v-if="loading">
+        <template v-if="$store.state.taskLoading">
           <v-progress-linear :indeterminate="true" color="primary"></v-progress-linear>
         </template>
         <template v-else>
@@ -17,77 +17,30 @@
     <br>
 
     <v-fade-transition hide-on-leave>
-      <Task v-if="task && !loading" :task="task" :twists="twists" @done="onTaskDone()"></Task>
+      <Subtask v-if="$store.getters.subtask && !$store.state.taskLoading" :task="$store.getters.subtask" :twist="$store.getters.twist"></Subtask>
     </v-fade-transition>
   </div>
 </template>
 <script>
 import {Tasks} from "@/tasks/tasks";
-import {Uniform} from "@/tasks/util";
-import Task from "@/components/Task.vue";
+import Subtask from "@/components/Subtask.vue";
 
 export default {
   name: "GenerateTaskMenu",
-  components: {Task},
+  components: {Subtask},
   data() {
     return {
-      loading: false
-    }
-  },
-  computed: {
-    task() {
-      if (this.$store.state.task) {
-        return Tasks[this.$store.state.task]
-      }
-      return null;
-    },
-    twists() {
-      if (this.$store.state.twists) {
-        const twists = Tasks[this.$store.state.task].twists;
-
-        return this.$store.state.twists.map(name => {
-          if (!twists || !(name in twists)) {
-            debugger;
-          }
-
-          return twists[name]
-        })
-      }
-      debugger
-      return null;
     }
   },
   methods: {
     rollTask() {
-      this.loading = true;
-      window.setTimeout(() => {
-        this.$store.dispatch("rollTaskAndTwist").then(() => {
-          this.loading = false;
-        });
-      }, 100);
+      this.$store.dispatch("generateTask");
     },
     onGenerateClick() {
       this.rollTask();
 
       // this.$store.commit("setSeed", `${Math.random()}`);
     },
-    onTaskDone() {
-      this.$store.commit("incrementCompletedTasks")
-
-      const task = Tasks[this.$store.state.task];
-
-      // Create modifiers
-      Object.keys(task.modifiers).forEach(name => {
-        this.$store.commit("createModifier", name);
-      });
-      this.twists.slice(0, this.$store.state.numTwists).forEach(twist => {
-        Object.keys(twist.modifiers).forEach(name => {
-          this.$store.commit("createModifier", name);
-        });
-      });
-
-      this.rollTask();
-    }
   }
 }
 </script>

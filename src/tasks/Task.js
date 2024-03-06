@@ -11,13 +11,13 @@ export class ObjectReq extends Requirement {
     }
 }
 
-export class Task {
+export class Subtask {
 
     /**
      * @param {string} template
      * @param {Requirement[]|ObjectReq[]} requirements
      * @param {Object.<string, function>} variables
-     * @param {Object.<string, Task>} twists
+     * @param {Object.<string, Subtask>} twists
      * @param {Object.<string, Modifier>} modifiers
      */
     constructor(template, requirements = [], variables = {}, twists = {}, modifiers = {}) {
@@ -26,15 +26,9 @@ export class Task {
         this.variables = variables
         this.twists = twists
         this.modifiers = modifiers;
-        this._text = null;
     }
 
     text() {
-
-        if(this._text) {
-            return this._text;
-        }
-
         let text = this.template;
         for (const [k, v] of Object.entries(this.variables)) {
             text = text.replaceAll(`{${k}}`, v());
@@ -43,7 +37,6 @@ export class Task {
         text = text.replaceAll("[", "<span class=\"spoiler\" onclick='this.classList.add(\"unspoiler\")'>")
         text = text.replaceAll("]", "</span>BREAK")
 
-        this._text = text;
         return text;
     }
 
@@ -67,6 +60,6 @@ export class Task {
     }
 }
 
-export class Twist extends Task {
+export class Twist extends Subtask {
 
 }

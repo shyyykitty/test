@@ -10,15 +10,12 @@ export default {
   name: "TaskBody",
   props: {
     text: {},
-    twists: {
-      default: []
-    }
   },
   computed: {
     _text() {
       let text = this.text;
 
-      if (this.twists.includes("AllowedCumTwist")) {
+      if (this.$store.twistName === "AllowedCumTwist") {
         text = text.replace(/(you are not allowed to cum)/ig, "<s>$1</s>")
       }
 

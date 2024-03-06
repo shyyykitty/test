@@ -1,6 +1,7 @@
 <template>
-
   <v-container style="max-width: 1000px">
+
+    <DebugMenu v-if="$store.state.debug" style="margin-bottom: 1em"/>
 
     <Modifier :modifier="mod" v-for="mod in $store.state.modifiers"></Modifier>
 
@@ -11,12 +12,14 @@
 <script>
 import GenerateTaskMenu from "@/components/GenerateTaskMenu.vue";
 import Modifier from "@/components/Modifier.vue";
+import DebugMenu from "@/components/DebugMenu.vue";
 
 export default {
   name: "HomeView",
   components: {
     Modifier,
-    GenerateTaskMenu
+    GenerateTaskMenu,
+    DebugMenu
   }
 }
 

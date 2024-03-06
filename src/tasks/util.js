@@ -1,16 +1,21 @@
 import seedrandoom from "seedrandom/seedrandom"
+import * as Subtasks from "@/tasks/tasks";
 
-let rand = seedrandoom("hello");
+let SEED = 0;
 
 export function setSeed(seed) {
-    rand = seedrandoom(seed);
+    SEED = seed;
 }
 
 export function Uniform(min, max) {
-    return () => Math.floor(rand() * (max + 1 - min) + min);
+    return () => {
+        const rand = seedrandoom(SEED);
+        return Math.floor(rand() * (max + 1 - min) + min);
+    }
 }
 
 function _gaussian(mean, stdev) {
+    const rand = seedrandoom(SEED);
     const u = 1 - rand();
     const v = rand();
     const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
@@ -46,11 +51,87 @@ export function humanTime(sec_num) {
 }
 
 export async function toBase64(str) {
-  const base64url = await new Promise(r => {
-    const reader = new FileReader();
-    reader.onload = () => r(reader.result);
-    reader.readAsDataURL(new Blob([str]));
-  });
+    const base64url = await new Promise(r => {
+        const reader = new FileReader();
+        reader.onload = () => r(reader.result);
+        reader.readAsDataURL(new Blob([str]));
+    });
 
-  return base64url.slice(base64url.indexOf(',') + 1);
+    return base64url.slice(base64url.indexOf(',') + 1);
+}
+
+class Node {
+    constructor(val) {
+        this.val = val;
+        this.childs = [];
+    }
+
+    add(n) {
+        if (n === "$return") {
+            // FIXME: This shouldn't happen
+            debugger;
+        }
+
+        if (n === undefined) {
+            // FIXME: Action that goes to an invalid step
+            debugger
+        }
+        this.childs.push(n);
+    }
+}
+
+export function generateGraph(task) {
+    const nodes = {$end: new Node("$end")};
+
+    Object.keys(task)
+        .forEach(name => nodes[name] = new Node(name));
+
+    Object.entries(task).forEach(([name, steps]) => {
+        steps.forEach(step => {
+            const node = new Node(name + "." + step.name);
+            nodes[node.val] = node;
+            nodes[name].add(node);
+
+            step.actions
+                .filter(action => action.step !== "$return")
+                .forEach(action => nodes[node.val].add(nodes[action.step]));
+        });
+    });
+
+    return nodes;
+}
+
+export function getValidPaths(nodes) {
+    const validPaths = [];
+
+    function dfsTraverse(node, path) {
+        if (path === undefined) {
+            path = [];
+        }
+
+        path.push(node.val);
+
+        if (node.val === "$end") {
+            validPaths.push(path.slice());
+            return;
+        }
+
+        node.childs.forEach(x => {
+            if (!path.includes(x.val)) {
+                dfsTraverse(x, path.slice());
+            }
+        });
+    }
+
+    dfsTraverse(nodes["$start"]);
+
+    return validPaths
+        .map(path => path
+            .filter(node => node.includes("."))
+            .map(node => Subtasks[node.substring(node.indexOf(".") + 1)])
+        );
+}
+
+export function randomSeed() {
+    return Math.round(Math.random() * 10000);
 }

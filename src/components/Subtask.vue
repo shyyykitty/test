@@ -18,18 +18,17 @@
     </v-card-title>
 
     <v-card-text>
-      <TaskBody :text="text" :twists="$store.state.twists.slice(0, this.numTwists)"></TaskBody>
+      <TaskBody :text="text"></TaskBody>
 
       <!-- TODO: how to handle multiple timers?-->
       <Timer v-if="task.getTimers().length > 0" :initial-value="task.getTimers()[0]"/>
     </v-card-text>
 
-    <!-- Twists -->
-    <v-card-text v-if="numTwists > 0">
-      <div style="font-size: 1.1rem; margin-bottom: 10px">Twist{{ numTwists > 1 ? 's' : '' }}</div>
+    <!-- Twist -->
+    <v-card-text v-if="twist">
+      <div style="font-size: 1.1rem; margin-bottom: 10px">Twist</div>
 
-      <v-card v-for="(twist, idx) in displayedTwists" style="margin-bottom: 15px">
-
+      <v-card>
         <!-- skip menu -->
         <div style="float: right; font-size: 1.25rem; padding-top: 0.5rem">
           <v-dialog width="500">
@@ -39,7 +38,7 @@
 
             <template v-slot:default="{ isActive }">
               <v-card title="Skip twist">
-                <RequirementsList @on-skip-task="onSkipTwist(idx); isActive.value = false"
+                <RequirementsList @on-skip-task="onSkipTwist(); isActive.value = false"
                                   @on-remove-req="onRemoveReq($event, false); onSkipTwist(); isActive.value = false"
                                   :task="twist"
                                   :twist="true"/>
@@ -54,16 +53,30 @@
       </v-card>
     </v-card-text>
 
-    <v-card-text v-else>
+    <v-card-text v-else-if="$store.getters.possibleTwists.length > 0">
       <v-btn @click="onAddTwist()" style="margin-left: auto;" color="primary" variant="outlined">
         <v-icon>add</v-icon>
         Add twist
       </v-btn>
     </v-card-text>
 
+    <!-- Actions-->
     <v-card-actions>
-      <v-btn @click="onTaskDone()" style="margin-left: auto;" color="primary" variant="elevated">
-        Task completed
+      <v-btn
+          v-if="$store.state.backStack.length > 0"
+          @click="goBack()"
+          color="grey"
+          variant="outlined"
+      >
+        Back
+      </v-btn>
+      <v-spacer></v-spacer>
+      <v-btn v-for="action in $store.getters.stepActions"
+             @click="doAction(action)"
+             color="primary"
+             :variant="action.label === 'Continue' || action.step === '$end' ? 'elevated' : 'outlined'"
+      >
+        {{ action.label }}
       </v-btn>
     </v-card-actions>
 
@@ -83,18 +96,12 @@ import TaskBody from "@/components/TaskBody.vue";
 import Timer from "@/components/Timer.vue";
 
 export default {
-  name: "Task",
+  name: "SubTask",
   components: {Timer, TaskBody, RequirementsList},
-  props: ["task", "twists"],
+  props: ["task", "twist"],
   computed: {
     text() {
-      return this.task.text() ?? ""
-    },
-    numTwists() {
-      return Math.min(this.twists.length, this.$store.state.numTwists);
-    },
-    displayedTwists() {
-      return this.twists.slice(0, this.numTwists)
+      return this.task.text();
     }
   },
   data() {
@@ -105,25 +112,28 @@ export default {
   },
   methods: {
     onSkipTask() {
-      this.$store.commit("disableTask", this.$store.state.task);
-      this.$store.dispatch("rollTaskAndTwist");
+      this.$store.commit("disableSubtask", this.$store.getters.subtaskName);
+      this.$store.dispatch("rerollSubtask");
     },
-    onSkipTwist(index) {
-      this.$store.commit("disableTwist", this.$store.state.twists[index]);
+    onSkipTwist() {
+      this.$store.commit("disableTwist", this.$store.state.twistName);
       this.$store.dispatch("rollTwist");
     },
-    onTaskDone() {
-      this.$emit("done");
+    doAction(action) {
+      this.$store.dispatch("doAction", action);
+    },
+    goBack() {
+      this.$store.dispatch("doAction", {step: "$back"});
     },
     onRemoveReq(req, rerollTask) {
       this.$store.commit("removeRequirement", req);
       this.showSnackBar = true;
       if (rerollTask) {
-        this.$store.dispatch("rollTaskAndTwist");
+        this.$store.dispatch("rerollSubtask");
       }
     },
     onAddTwist() {
-      this.$store.commit("setNumTwists", 1);
+      this.$store.dispatch("rollTwist");
     }
   }
 }
