@@ -194,7 +194,7 @@ export const NipplePlayStep1Task = new Subtask(
     "Caress and play with your body without touching your crotch area until you are wet. " +
     "Remove your shirt, scoop up the wetness with your fingers on both hands and very gently roll your nipples " +
     "between your index and thumb. Close your eyes and enjoy the feeling. Do this for {N} minutes.",
-    [NipplesReq, TouchingReq],
+    [NipplesReq,],  // Intentionally doesn't have TouchingReq
     {N: Uniform(3, 8)},
     {NakedTwist,}
 )
@@ -215,7 +215,7 @@ export const NipplePlayStep3Task = new Subtask(
     "is done, you are allowed to touch yourself with your hands for exactly {X} seconds before starting the next task.",
     [],
     {X: Gaussian(4, 1)},
-    {AllowedCumTwist}
+    {AllowedCumTwist, ButtPlugTwist, MirrorTwist}
 )
 
 export const NipplePlayStep4Task = new Subtask(
@@ -227,7 +227,7 @@ export const NipplePlayStep4Task = new Subtask(
     "is done, you are allowed to touch yourself with your hands for exactly {X} seconds before starting the next task.",
     [],
     {N: Uniform(2, 3), X: Gaussian(5, 1)},
-    {AllowedCumTwist}
+    {AllowedCumTwist, ButtPlugTwist, MirrorTwist}
 )
 
 export const NipplePlayStep5Task = new Subtask(
@@ -237,21 +237,21 @@ export const NipplePlayStep5Task = new Subtask(
     "each side without holding them. You don't get to touch this time. Instead, slap your butt {X} times.",
     [],
     {N: Uniform(5, 12), X: Gaussian(10, 5)},
+    {ButtPlugTwist, MirrorTwist}
 )
 
 export const NipplePlayStep6Task = new Subtask(
-    "Good job! You are allowed to touch for {X} seconds before starting this task. [Actually, you " +
-    "can touch for 20 seconds.] [If you are reading this sentence, then you lost your chance to touch, sorry!][ " +
+    "Good job! You are allowed to touch for {X} seconds before starting this task.BREAK [ " +
     "Now, move to a kneeling position with your legs spread and start pinching your nipples hard enough to make you " +
     "wince, then pinch a bit harder. Twist both nipples 180° one direction, then 180° in the other direction. Keep " +
     "pinching at the same time. Start pulling your nipples to a tolerable distance. Pull them further for a second, " +
     "then bring them back. Remember to keep twisting and pinching. Next, pinch them harshly before lightly flicking " +
     "them. Repeat this entire task between {Y} and {Z} times. The number you choose will determine how long you are " +
     "allowed to edge.] [Now you get your reward. the number of times you repeated the task is equal to the number of " +
-    "minutes you can touch yourself.]",
+    "minutes you are allowed to touch yourself.]",
     [],
-    {X: Gaussian(5, 3), Y: Uniform(3, 8), Z: Uniform(8, 20)},
-    {NoEdgingTwist}
+    {X: Gaussian(20, 5), Y: Uniform(3, 8), Z: Uniform(8, 20)},
+    {ButtPlugTwist, MirrorTwist}
 )
 
 export const JoiDildoTask = new Subtask(
@@ -270,40 +270,6 @@ export const JoiDildoTask = new Subtask(
     {ButtPlugTwist, NakedTwist, EdgeBeforeTaskTwist, NippleClampTwist}
 )
 
-export const CumTask = new Subtask(
-    "[As soon as you are done reading this sentence, strip completely naked and start touching nice and fast.] " +
-    "[Get to the edge as quickly as you can, then and add one twist to this task.]",
-    [EdgeReq, TouchingReq],
-    {},
-    {
-        // TODO: interactive countdown
-        "CumInXSecTwist": new Twist("[You are allowed to cum within the next {X} seconds. If you cannot cum in time, get to the " +
-            "edge and ride it for 10 seconds.]", [CumReq], {X: Uniform(20, 40)}),
-
-        "RuinNowTwist": new Twist("[Ruin your orgasm immediately.]", [RuinOrgasmReq]),
-        ContinueEdgingRuinTwist,
-        "EdgeThenCumAfterNextTaskTwist": new Twist("[Edge {N} times.] [You can cum after you complete the next task. Stay naked.]", [CumReq], {N: Gaussian(5, 3)}),
-        "SlowCirclesCumTwist": new Twist("[Start a stopwatch.] [Very slowly massage yourself with one finger in your most sensitive spot " +
-            "using a circular motion. Do this lightly; do not apply any pressure. Every time you get close, go slower " +
-            "and ease the pressure. <b>Do not stop moving your finger</b>. You will reach a point where you are barely " +
-            "touching, and barely moving your finger. Try to hold on as long as possible. When you start losing " +
-            "control and go over the edge, you are allowed to start rubbing hard and fast, but only if you have been " +
-            "rubbing for at least {N} minutes. Otherwise, continue rubbing at the same pace: you are not allowed " +
-            "to speed up or slow down.]",
-            [RuinOrgasmReq, CumReq],
-            {N: Gaussian(3, 2)}),
-        // TODO: online timer
-        "RuinThenCumTwist": new Twist("[Start touching yourself gently and slowly. Set a timer on your phone for 8 minutes. " +
-            "Start slowly increasing up the intensity so that you are ready to cum when the timer finishes.] " +
-            "[When it does, get to a hard edge and gently ruin your orgasm. If you have been denied for at least " +
-            "{N} day(s), you can get a full orgasm as soon as you regain your senses. Otherwise, you can choose to " +
-            "ruin your orgasm one more time before starting the next task.]", [RuinOrgasmReq, CumReq],
-            {N: Gaussian(2, 1)}),
-        "VibratorCumTwist": new Twist("[Edge one more time with a vibrator.] [Hold the vibrator firmly against your most " +
-            "sensitive area and ride the edge as long as possible while ramping down the vibration intensity." +
-            "When you start to orgasm, ramp up to maximum intensity for 15 seconds.]", [VibeReq, CumReq])
-    }
-)
 
 export const DenialVibe = new Subtask(
     "Make sure that your vibrator is fully charged and ready to go. Tie both of your legs firmly, either" +
@@ -362,6 +328,11 @@ class Step {
      * @param prob {number|null}
      */
     constructor(subtask, actions, prob = 0) {
+
+        if (Object.keys(subtask).length !== 1) {
+            debugger
+        }
+
         this.name = Object.keys(subtask)[0];
         this.subtask = Object.values(subtask)[0];
         this.actions = actions;
@@ -369,39 +340,129 @@ class Step {
     }
 }
 
+export const CumTaskIntroEdgeFast = new Subtask(
+    "Strip naked and start touching nice and fast. " +
+    "Work yourself up to the edge as quickly as you can.",
+    [EdgeReq, TouchingReq],
+)
+
+// TODO: 'forced' timer
+export const CumInXSec = new Subtask(
+    "You are allowed to cum within the next {X} seconds. BREAK If you cannot cum in time, get to the " +
+    "edge, ride it for 10 seconds and reroll this task.",
+    [CumReq],
+    {X: Uniform(20, 40)}
+)
+
+export const RuinNow = new Subtask(
+    "Ruin your orgasm immediately.",
+    [RuinOrgasmReq],
+)
+
+// TODO: simple edge before this one
+export const CumAfterNextTask = new Subtask(
+    "You can cum after you complete the next task. Stay naked."
+)
+
+export const VibratorCum = new Subtask(
+    "Edge one more time with a vibrator. Hold the vibrator firmly against your most " +
+    "sensitive area and ride the edge as long as possible while ramping down the vibration intensity. " +
+    "When you start to orgasm, ramp up to maximum intensity for 15 seconds.",
+    [VibeReq, CumReq]
+)
+
+export const RuinThenCumP1 = new Subtask(
+    "Start touching yourself gently and slowly. " +
+    "Start slowly increasing up the intensity so that you are ready to cum after {N} minutes," +
+    " when the timer finishes. When it does, get to a hard edge and gently ruin your orgasm. ",
+    [RuinOrgasmReq, CumReq],
+    {N: Uniform(8, 12)}
+)
+
+export const RuinThenCumP2 = new Subtask(
+    "If it has been at least {N} day(s) since you last had an orgasm," +
+    " you can get a full orgasm as soon as you regain your senses. Otherwise," +
+    " you can choose to ruin your orgasm one more time before starting the next task.",
+    [RuinOrgasmReq, CumReq],
+    {N: Gaussian(2, 1)}
+)
+
+export const SlowCirclesP1 = new Subtask(
+"Very slowly massage yourself with one finger in your most sensitive spot " +
+    "using a circular motion. Do this lightly; do not apply any pressure. Every time you get close, go slower " +
+    "and ease the pressure. <b>Do not stop moving your finger</b>. You will reach a point where you are barely " +
+    "touching and barely moving your finger.",
+    [CumReq, TouchingReq]
+)
+
+export const SlowCirclesSlowEnding = new Subtask(
+    "Continue rubbing at the same pace until you cum: you are not allowed to speed up or slow down.",
+    [RuinOrgasmReq, TouchingReq]
+)
+
+export const SlowCirclesFastEnding = new Subtask(
+    "Continue rubbing. When you start losing control and go over the edge, you are allowed to start rubbing " +
+    "faster.",
+    [CumReq, TouchingReq]
+)
+
 const End = new Action("$end");
 const Return = new Action("$return");
 const Continue = step => new Action(step);
 
 export const Tasks = {
     // NipplePlayGame: {
-    //     start: [Step({NipplePlayStep1Task}, [Action("2")])],
-    //     2: [Step({NipplePlayStep2Task}, [Action("3")])],
-    //     3: [Step({NipplePlayStep3Task}, [Action("4")])],
-    //     4: [Step({NipplePlayStep4Task}, [Action("5")])],
-    //     5: [Step({NipplePlayStep5Task}, [Action("6")])],
-    //     6: [Step({NipplePlayStep6Task}, [Action("end")])],
+    //     $start: [new Step({NipplePlayStep1Task}, [Continue("2")])],
+    //     2: [new Step({NipplePlayStep2Task}, [Continue("3")])],
+    //     3: [new Step({NipplePlayStep3Task}, [Continue("4")])],
+    //     4: [new Step({NipplePlayStep4Task}, [Continue("5")])],
+    //     5: [new Step({NipplePlayStep5Task}, [Continue("6")])],
+    //     6: [new Step({NipplePlayStep6Task}, [Continue("$end")])],
     // },
-    test1: {
-        $start: [
-            // new Step({LewdPic}, [End]),
-            new Step({CumInPants}, [new Action("punishment", "Go to punishment", "2"), Continue("2")]),
-        ],
-        2: [
-            new Step({WashingMachineDildoTask}, [Continue("3")]),
-            // new Step({SuckDildoTask}, [End]),
+    
+    Cum: {
+        $start: [new Step({CumTaskIntroEdgeFast}, [Continue("2")])],
+        2:[
+            new Step({CumInXSec}, [new Action("2", "reroll"), Continue("$end")]),
+            new Step({RuinNow}, [new Action("2", "Try again"), Continue("$end")]),
+            new Step({VibratorCum}, [Continue("$end")]),
+            new Step({RuinThenCumP1}, [Continue("RuinThenCumP2")]),
+            new Step({SlowCirclesP1}, [new Action("SlowCirclesEnding", "I'm close")]),
+            new Step({SimpleEdgeTask}, [Continue("3")]),
         ],
         3: [
-            // new Step({WashingMachineDildoTask}, [Continue("2")]),
-            new Step({SuckDildoTask}, [new Action("punishment", "Go to punishment", "$end"), End]),
+            new Step({RuinNow}, [Continue("$end")]),
+            new Step({CumAfterNextTask}, [Continue("$end")]),
         ],
-        punishment: [
-            new Step({HumpPillowTask}, [new Action("punishment2", "Go to punishment2"), Return]),
+        RuinThenCumP2: [
+            new Step({RuinThenCumP2}, [Continue("$end")]),
         ],
-        punishment2: [
-            new Step({HumpPillowTask}, [Return]),
+        SlowCirclesEnding: [
+            new Step({SlowCirclesSlowEnding}, [Continue("$end")]),
+            new Step({SlowCirclesFastEnding}, [Continue("$end")]),
         ]
-    },
+    }
+
+    // test1: {
+    //     $start: [
+    //         // new Step({LewdPic}, [End]),
+    //         new Step({CumInPants}, [new Action("punishment", "Go to punishment", "2"), Continue("2")]),
+    //     ],
+    //     2: [
+    //         new Step({WashingMachineDildoTask}, [Continue("3")]),
+    //         // new Step({SuckDildoTask}, [End]),
+    //     ],
+    //     3: [
+    //         // new Step({WashingMachineDildoTask}, [Continue("2")]),
+    //         new Step({SuckDildoTask}, [new Action("punishment", "Go to punishment", "$end"), End]),
+    //     ],
+    //     punishment: [
+    //         new Step({HumpPillowTask}, [new Action("punishment2", "Go to punishment2"), Return]),
+    //     ],
+    //     punishment2: [
+    //         new Step({HumpPillowTask}, [Return]),
+    //     ]
+    // },
     // LewPicTask: {
     //     $start: [
     //         new Step({LewdPic}, [new Action("$end")])

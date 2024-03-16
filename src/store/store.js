@@ -88,7 +88,7 @@ export const store = createStore({
             requirements: [],
 
             theme: "pink",
-            debug: true,
+            debug: import.meta.env.DEV,
 
             history: [],
             completedTasks: 0,
@@ -209,6 +209,7 @@ export const store = createStore({
     mutations: {
         setDebug(state, value) {
             state.debug = value;
+            saveState();
         },
         load(state, newState) {
             Object.assign(state, newState)
@@ -417,15 +418,22 @@ export const store = createStore({
             commit("setReturnTo", action.returnTo);
             commit("setSubtask", null);
             commit("setStep", step);
+
+
             await dispatch("rerollSubtask");
         },
         rollTwist({commit, state, getters}) {
             commit("setTwist", getNextTwist(state, getters));
         },
         async rerollSubtask({commit, state, getters}) {
+            commit("setTaskLoading", true);
+            await new Promise(r => setTimeout(r, 50));
+
             commit("setSubtask", getNextSubtask(state, getters))
             commit("setSeed", randomSeed());
             commit("setTwist", null);
+
+            commit("setTaskLoading", false);
         },
 
         async generateTask({commit, state, getters}) {

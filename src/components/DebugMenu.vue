@@ -4,7 +4,11 @@
 
     <v-card-text>
 
-      <v-btn color="error" variant="outlined" @click="onReset">Reset</v-btn>
+      <div style="display: flex; gap: 10px">
+        <v-btn color="error" variant="outlined" @click="onReset">Reset</v-btn>
+        <v-btn color="secondary" variant="outlined" @click="onChangeSeed">Change seed</v-btn>
+        <v-btn color="secondary" variant="outlined" @click="onRemoveTwist">Remove twist</v-btn>
+      </div>
 
       <div style="margin-bottom: 1em"></div>
 
@@ -47,6 +51,7 @@
 
 <script>
 import {loadState} from "@/store/store";
+import {randomSeed} from "@/tasks/util";
 
 export default {
   name: "DebugMenu",
@@ -55,6 +60,15 @@ export default {
       localStorage.removeItem("kinky-tasks");
       loadState();
       window.location.reload();
+    },
+    async onChangeSeed() {
+      this.$store.commit("setTaskLoading", true);
+      this.$store.commit("setSeed", randomSeed());
+      await new Promise(r => setTimeout(r, 100));
+      this.$store.commit("setTaskLoading", false);
+    },
+    onRemoveTwist() {
+      this.$store.commit("setTwist", null);
     }
   }
 }

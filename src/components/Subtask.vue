@@ -111,9 +111,9 @@ export default {
     }
   },
   methods: {
-    onSkipTask() {
+    async onSkipTask() {
       this.$store.commit("disableSubtask", this.$store.getters.subtaskName);
-      this.$store.dispatch("rerollSubtask");
+      await this.$store.dispatch("rerollSubtask");
     },
     onSkipTwist() {
       this.$store.commit("disableTwist", this.$store.state.twistName);
@@ -125,11 +125,11 @@ export default {
     goBack() {
       this.$store.dispatch("doAction", {step: "$back"});
     },
-    onRemoveReq(req, rerollTask) {
+    async onRemoveReq(req, rerollTask) {
       this.$store.commit("removeRequirement", req);
       this.showSnackBar = true;
       if (rerollTask) {
-        this.$store.dispatch("rerollSubtask");
+        await this.$store.dispatch("rerollSubtask");
       }
     },
     onAddTwist() {

@@ -23,7 +23,7 @@ export const NakedTwist = new Twist(
 
 export const ButtPlugTwist = new Twist(
     "You have to complete the task while wearing a butt plug.",
-    [ButtPlugReq]
+    [ButtPlugReq, TouchingReq]
 )
 export const CumWithinXMinTwist = new Twist(
     "If you are not able to cum within {N} minutes, you are denied for the rest of today.",
@@ -101,6 +101,6 @@ export const TouchIfDropTwist = new Twist(
 )
 
 export const NoEdgingTwist = new Twist(
-    "If you are allowed, you must pleasure yourself during the task, but you are not allowed to edge. If you " +
+    "You must pleasure yourself during the task, but you are not allowed to edge. If you " +
     "reach the edge by accident, you have to stop touching until the next task."
 )

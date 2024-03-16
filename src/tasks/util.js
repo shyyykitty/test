@@ -26,10 +26,10 @@ function _gaussian(mean, stdev) {
 export function Gaussian(mean, stdev) {
     return () => {
         let result = -1;
-        while (result <= 0) {
+        while (result < 0) {
             result = _gaussian(mean, stdev);
         }
-        return result;
+        return result === 0 ? 1 : result;
     }
 }
 
