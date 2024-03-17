@@ -75,11 +75,7 @@ function getNextSubtask(state, getters) {
     const cdf = pmf.map((sum => value => sum += value)(0));
     cdf[cdf.length - 1] = 1;
 
-    console.log(cdf)
-    console.log(random());
-    console.log(cdf.findIndex(el => el >= random()));
-
-    const [i, _] = possibleSubtasks[Uniform(0, possibleSubtasks.length - 1)()];
+    const [i, _] = possibleSubtasks[cdf.findIndex(el => el >= random())];
 
     return Number(i);
 }
