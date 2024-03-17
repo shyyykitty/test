@@ -23,6 +23,11 @@ function _gaussian(mean, stdev) {
     return Math.floor(z * stdev + mean);
 }
 
+export function random() {
+    const rand = seedrandoom(SEED);
+    return rand();
+}
+
 export function Gaussian(mean, stdev) {
     return () => {
         let result = -1;

@@ -359,7 +359,6 @@ export const RuinNow = new Subtask(
     [RuinOrgasmReq],
 )
 
-// TODO: simple edge before this one
 export const CumAfterNextTask = new Subtask(
     "You can cum after you complete the next task. Stay naked."
 )
@@ -424,7 +423,7 @@ export const Tasks = {
         $start: [new Step({CumTaskIntroEdgeFast}, [Continue("2")])],
         2:[
             new Step({CumInXSec}, [new Action("2", "reroll"), Continue("$end")]),
-            new Step({RuinNow}, [new Action("2", "Try again"), Continue("$end")]),
+            new Step({RuinNow}, [new Action("2", "Try again"), Continue("$end")], .1),
             new Step({VibratorCum}, [Continue("$end")]),
             new Step({RuinThenCumP1}, [Continue("RuinThenCumP2")]),
             new Step({SlowCirclesP1}, [new Action("SlowCirclesEnding", "I'm close")]),

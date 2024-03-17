@@ -1,9 +1,10 @@
 import {createStore} from "vuex";
 import {Requirements} from "@/tasks/requirements";
-import {setSeed, Uniform, generateGraph, getValidPaths, randomSeed} from "@/tasks/util";
+import {setSeed, Uniform, generateGraph, getValidPaths, randomSeed, random} from "@/tasks/util";
 import {Tasks} from "@/tasks/tasks";
 import * as Modifiers from "@/tasks/modifiers";
 import * as Twists from "@/tasks/twists";
+import seedrandoom from "seedrandom/seedrandom";
 
 
 function hasRequirements(task, requirements) {
@@ -52,8 +53,34 @@ function getNextSubtask(state, getters) {
         debugger
     }
 
-    // TODO: use the .probabilities
-    // https://stackoverflow.com/a/57130749
+    const probSum = possibleSubtasks
+        .map(([_, step]) => step.prob)
+        .reduce((a, b) => a + b, 0)
+
+    if (probSum > 1) {
+        debugger
+    }
+
+    const numberOfUnspecifiedProbs = possibleSubtasks
+        .map(([_, step]) => step.prob)
+        .filter(prob => prob === 0)
+        .length;
+
+    let unspecifiedProb = 0;
+    if (numberOfUnspecifiedProbs > 0) {
+        unspecifiedProb = (1 - probSum) / numberOfUnspecifiedProbs;
+    }
+
+    const pmf = possibleSubtasks
+        .map(([_, step]) => step.prob === 0 ? unspecifiedProb : step.prob);
+
+    const cdf = pmf.map((sum => value => sum += value)(0));
+    cdf[cdf.length - 1] = 1;
+
+    console.log(cdf)
+    console.log(random());
+    console.log(cdf.findIndex(el => el >= random()));
+
     const [i, _] = possibleSubtasks[Uniform(0, possibleSubtasks.length - 1)()];
 
     return Number(i);
