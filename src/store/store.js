@@ -4,11 +4,9 @@ import {setSeed, Uniform, generateGraph, getValidPaths, randomSeed, random} from
 import {Tasks} from "@/tasks/tasks";
 import * as Modifiers from "@/tasks/modifiers";
 import * as Twists from "@/tasks/twists";
-import seedrandoom from "seedrandom/seedrandom";
 
 
 function hasRequirements(task, requirements) {
-
     const nodes = generateGraph(task);
     const paths = getValidPaths(nodes);
 
@@ -121,6 +119,8 @@ export const store = createStore({
             completedTasks: 0,
             
             taskLoading: false,
+
+            helpSkip: true,
         }
     },
     getters: {
@@ -234,6 +234,10 @@ export const store = createStore({
         }
     },
     mutations: {
+        setHelpSkip(state, value) {
+            state.helpSkip = value;
+            saveState();
+        },
         setDebug(state, value) {
             state.debug = value;
             saveState();
@@ -446,7 +450,6 @@ export const store = createStore({
             commit("setSubtask", null);
             commit("setStep", step);
 
-
             await dispatch("rerollSubtask");
         },
         rollTwist({commit, state, getters}) {
@@ -464,7 +467,6 @@ export const store = createStore({
         },
 
         async generateTask({commit, state, getters}) {
-
             commit("setTaskLoading", true);
             await new Promise(r => setTimeout(r, 100));
             

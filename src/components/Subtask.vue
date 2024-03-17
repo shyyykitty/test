@@ -2,19 +2,32 @@
   <v-card class="task">
     <v-card-title style="display: flex; justify-content: space-between">
       <span>Task</span>
-      <v-dialog width="500">
-        <template v-slot:activator="{ props }">
-          <v-icon v-bind="props">more_vert</v-icon>
-        </template>
 
-        <template v-slot:default="{ isActive }">
-          <v-card title="Skip task">
-            <RequirementsList @on-skip-task="onSkipTask(); isActive.value = false"
-                              @on-remove-req="onRemoveReq($event, true); isActive.value = false"
-                              :task="task"/>
-          </v-card>
-        </template>
-      </v-dialog>
+      <div>
+        <v-tooltip
+            v-model="showSkipHelpTooltip"
+            location="top"
+        >
+          <template v-slot:activator="{ props }">
+            <div v-bind="props"></div>
+          </template>
+          <span>Click here to skip this task</span>
+        </v-tooltip>
+
+        <v-dialog width="500">
+          <template v-slot:activator="{ props }">
+            <v-icon v-bind="props" @click="onOpenSkipMenu()">more_vert</v-icon>
+          </template>
+
+          <template v-slot:default="{ isActive }">
+            <v-card title="Skip task">
+              <RequirementsList @on-skip-task="onSkipTask(); isActive.value = false"
+                                @on-remove-req="onRemoveReq($event, true); isActive.value = false"
+                                :task="task"/>
+            </v-card>
+          </template>
+        </v-dialog>
+      </div>
     </v-card-title>
 
     <v-card-text>
@@ -107,10 +120,22 @@ export default {
   data() {
     return {
       showSnackBar: false,
+      showSkipHelpTooltip: false,
       timerValue: 0
     }
   },
+  mounted() {
+    window.setTimeout(() => {
+      if (this.$store.state.helpSkip) {
+        this.showSkipHelpTooltip = true;
+      }
+    }, 5000);
+  },
   methods: {
+    onOpenSkipMenu() {
+      this.showSkipHelpTooltip = false;
+      this.$store.commit("setHelpSkip", false);
+    },
     async onSkipTask() {
       this.$store.commit("disableSubtask", this.$store.getters.subtaskName);
       await this.$store.dispatch("rerollSubtask");
