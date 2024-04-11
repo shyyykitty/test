@@ -19,6 +19,24 @@ export class Modifier {
         this.addRequirements = addRequirements;
         this.removeRequirements = removeRequirements;
     }
+
+    getProgress(modifier, state) {
+
+        if (this.timeDuration) {
+            const remainingTime = (modifier.startTime + this.timeDuration) - Number(new Date());
+            return (this.timeDuration - remainingTime) / modifier.timeDuration;
+        }
+
+        return state.completedTasks / (modifier.startTask + this.taskDuration);
+    }
+
+    getRemainingTimeSec(startTime) {
+        return ((startTime + this.timeDuration) - Number(new Date())) / 1000;
+    }
+
+    getRemainingTasks(completedTasks, startTask) {
+        return (startTask + this.taskDuration) - completedTasks;
+    }
 }
 
 /**

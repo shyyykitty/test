@@ -5,6 +5,9 @@ import {Tasks} from "@/tasks/tasks";
 import * as Modifiers from "@/tasks/modifiers";
 import * as Twists from "@/tasks/twists";
 
+const DEFAULTS = {
+    requirements: Array.from([].concat(...Object.values(Requirements)).map(req => req.name))
+}
 
 function hasRequirements(task, requirements) {
     const nodes = generateGraph(task);
@@ -90,6 +93,19 @@ function getNextTwist(state, getters) {
     const [name, _] = possibleTwists[Uniform(0, possibleTwists.length - 1)()];
 
     return name;
+}
+
+export function loadState() {
+    if (!localStorage.getItem("kinky-tasks")) {
+        store.commit("load", DEFAULTS);
+    } else {
+        const config = JSON.parse(localStorage.getItem("kinky-tasks"));
+        store.commit("load", config);
+    }
+}
+
+export function saveState() {
+    localStorage.setItem("kinky-tasks", JSON.stringify(store.state));
 }
 
 export const store = createStore({
@@ -478,20 +494,3 @@ export const store = createStore({
         }
     }
 });
-
-const DEFAULTS = {
-    requirements: Array.from([].concat(...Object.values(Requirements)).map(req => req.name))
-}
-
-export function loadState() {
-    if (!localStorage.getItem("kinky-tasks")) {
-        store.commit("load", DEFAULTS);
-    } else {
-        const config = JSON.parse(localStorage.getItem("kinky-tasks"));
-        store.commit("load", config);
-    }
-}
-
-export function saveState() {
-    localStorage.setItem("kinky-tasks", JSON.stringify(store.state));
-}

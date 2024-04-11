@@ -65,26 +65,17 @@ export default {
       this.$store.commit("removeModifier", this.modifier.name)
     },
     getProgress() {
-      /** @type Modifier */
-      const mod = Modifiers[this.modifier.name];
-
-      if (mod.timeDuration) {
-        const remainingTime = (this.modifier.startTime + mod.timeDuration) - Number(new Date());
-        return (mod.timeDuration - remainingTime) / mod.timeDuration;
-      }
-
-      return this.state.completedTasks / (this.modifier.startTask + mod.taskDuration);
+      return Modifiers[this.modifier.name].getProgress(this.modifier, this.state);
     },
     getLabel() {
       /** @type Modifier */
       const mod = Modifiers[this.modifier.name];
 
       if (mod.timeDuration) {
-        const remainingTime = (this.modifier.startTime + mod.timeDuration) - Number(new Date());
-        return `${humanTime(remainingTime / 1000)} remaining`
+        return `${humanTime(mod.getRemainingTimeSec(this.modifier.startTime))} remaining`
       }
 
-      const remainingTasks = this.state.completedTasks / (this.modifier.startTask + mod.taskDuration);
+      const remainingTasks = mod.getRemainingTasks(this.state.completedTasks, this.modifier.startTask);
       return `${remainingTasks} task${remainingTasks > 1 ? 's' : ''} remaining`;
     }
   }

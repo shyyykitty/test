@@ -22,7 +22,6 @@
   </div>
 </template>
 <script>
-import {Tasks} from "@/tasks/tasks";
 import Subtask from "@/components/Subtask.vue";
 
 export default {
@@ -38,8 +37,6 @@ export default {
     },
     onGenerateClick() {
       this.rollTask();
-
-      // this.$store.commit("setSeed", `${Math.random()}`);
     },
   }
 }
