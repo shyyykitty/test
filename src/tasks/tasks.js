@@ -24,11 +24,15 @@ import {
     WatchVideoPornTwist,
     SleepNakedTwist,
     VerySlowlyTwist,
-    NippleClampTwist, ContinueEdgingRuinTwist, TouchIfWetTwist, TouchIfDropTwist, NoEdgingTwist
+    NippleClampTwist,
+    ContinueEdgingRuinTwist,
+    TouchIfWetTwist,
+    TouchIfDropTwist,
+    NoEdgingTwist,
+    WaitNMinutesBetweenEdgesTwist
 } from "@/tasks/twists";
 import {Gaussian, Uniform} from "@/tasks/util";
-import {KeepLewdPicAsWallpaperModifier, NoTouchModifier} from "@/tasks/modifiers";
-import {ca} from "vuetify/locale";
+import {CumAfterNextTaskModifier, KeepLewdPicAsWallpaperModifier, NoTouchModifier} from "@/tasks/modifiers";
 
 
 export const LewdPic = new Subtask(
@@ -59,7 +63,7 @@ export const SimpleEdgeTask = new Subtask(
     "Edge {N} times.",
     [EdgeReq, TouchingReq],
     {N: Uniform(2, 10)},
-    {PinchNippleOnStopTwist, NakedTwist, ButtPlugTwist, MirrorTwist}
+    {PinchNippleOnStopTwist, NakedTwist, ButtPlugTwist, MirrorTwist, WaitNMinutesBetweenEdgesTwist}
 )
 
 export const VibeDenialTask = new Subtask(
@@ -360,7 +364,11 @@ export const RuinNow = new Subtask(
 )
 
 export const CumAfterNextTask = new Subtask(
-    "You can cum after you complete the next task. Stay naked."
+    "You can cum after you complete the next task. Stay naked.",
+    [],
+    {},
+    {},
+    {CumAfterNextTaskModifier}
 )
 
 export const VibratorCum = new Subtask(
@@ -423,7 +431,7 @@ export const Tasks = {
         $start: [new Step({CumTaskIntroEdgeFast}, [Continue("2")])],
         2:[
             new Step({CumInXSec}, [new Action("2", "reroll"), Continue("$end")]),
-            new Step({RuinNow}, [new Action("2", "Try again"), Continue("$end")], .1),
+            new Step({RuinNow}, [new Action("2", "Try again"), Continue("$end")],),
             new Step({VibratorCum}, [Continue("$end")]),
             new Step({RuinThenCumP1}, [Continue("RuinThenCumP2")]),
             new Step({SlowCirclesP1}, [new Action("SlowCirclesEnding", "I'm close")]),

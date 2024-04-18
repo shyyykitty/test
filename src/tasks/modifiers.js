@@ -27,7 +27,7 @@ export class Modifier {
             return (this.timeDuration - remainingTime) / modifier.timeDuration;
         }
 
-        return state.completedTasks / (modifier.startTask + this.taskDuration);
+        return (state.completedTasks - modifier.startTask) / this.taskDuration;
     }
 
     getRemainingTimeSec(startTime) {
@@ -49,8 +49,10 @@ export class Modifier {
 const HOUR = 60 * 60 * 1000;
 
 export const CumAfterNextTaskModifier = new Modifier(
-    "You are allowed to cum after you complete this task",
-    1
+    "You are allowed to cum after you complete this task.",
+    1,
+    null,
+    false
 )
 
 export const KeepLewdPicAsWallpaperModifier = new Modifier(

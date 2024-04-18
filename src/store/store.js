@@ -445,6 +445,7 @@ export const store = createStore({
                 : action.step;
 
             if (step === "$end") {
+                commit("incrementCompletedTasks");
 
                 // Create modifiers
                 getters.modifiersOnTaskComplete.forEach(name => {
@@ -457,7 +458,6 @@ export const store = createStore({
 
             commit("pushStep");
 
-            commit("incrementCompletedTasks");
             commit("setReturnTo", action.returnTo);
             commit("setSubtask", null);
             commit("setStep", step);

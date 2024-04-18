@@ -57,6 +57,12 @@ export const MirrorTwist = new Twist(
     [MirrorReq]
 )
 
+export const WaitNMinutesBetweenEdgesTwist = new Twist(
+    "You must wait {N} minutes between each edge.",
+    [],
+    {N: Uniform(1,2)}
+)
+
 export const WatchVideoPornTwist = new Twist(
     "You have to watch porn for at least {N} minutes.",
     [VideoPornReq],

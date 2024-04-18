@@ -3,7 +3,7 @@
     <v-card-text :class="{completed}">
       <p><b>{{completed ? 'Completed: ' : ''}}</b>{{ text }}</p>
 
-      <template v-if="!completed">
+      <template v-if="!completed && showProgress">
 
         <br>
         <v-progress-linear :model-value="progress * 100" color="secondary" height="22">
@@ -54,6 +54,9 @@ export default {
     },
     completed() {
       return this.progress >= 1.0;
+    },
+    showProgress() {
+      return Modifiers[this.modifier.name].showProgress;
     }
   },
   methods: {
@@ -65,7 +68,7 @@ export default {
       this.$store.commit("removeModifier", this.modifier.name)
     },
     getProgress() {
-      return Modifiers[this.modifier.name].getProgress(this.modifier, this.state);
+      return Modifiers[this.modifier.name].getProgress(this.modifier, this.$store.state);
     },
     getLabel() {
       /** @type Modifier */
@@ -75,7 +78,7 @@ export default {
         return `${humanTime(mod.getRemainingTimeSec(this.modifier.startTime))} remaining`
       }
 
-      const remainingTasks = mod.getRemainingTasks(this.state.completedTasks, this.modifier.startTask);
+      const remainingTasks = mod.getRemainingTasks(this.$store.state.completedTasks, this.modifier.startTask);
       return `${remainingTasks} task${remainingTasks > 1 ? 's' : ''} remaining`;
     }
   }
