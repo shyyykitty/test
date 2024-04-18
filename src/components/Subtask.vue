@@ -20,7 +20,11 @@
           </template>
 
           <template v-slot:default="{ isActive }">
-            <v-card title="Skip task">
+            <v-card>
+              <v-card-title>
+                Skip task
+                <v-icon style="float:right" @click="isActive.value = false">close</v-icon>
+              </v-card-title>
               <RequirementsList @on-skip-task="onSkipTask(); isActive.value = false"
                                 @on-remove-req="onRemoveReq($event, true); isActive.value = false"
                                 :task="task"/>
@@ -50,7 +54,11 @@
             </template>
 
             <template v-slot:default="{ isActive }">
-              <v-card title="Skip twist">
+              <v-card>
+                <v-card-title>
+                  Skip task
+                  <v-icon style="float:right" @click="isActive.value = false">close</v-icon>
+                </v-card-title>
                 <RequirementsList @on-skip-task="onSkipTwist(); isActive.value = false"
                                   @on-remove-req="onRemoveReq($event, false); onSkipTwist(); isActive.value = false"
                                   :task="twist"
